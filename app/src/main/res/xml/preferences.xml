@@ -30,17 +30,19 @@
             android:key="prefQaPrepend"
             android:title="Prepend"
             android:summary="Added before the data"
-            android:dialogMessage="Markdown prepended before the sent data.\n\nUse \\n for a new line. "/>
+            android:defaultValue="\\n[!date] [!time]\\n\\n"
+            android:dialogMessage="Markdown text prepended immediately before the sent data.  Use \\n for a new line. \n\nDefault: \\n[!date] [!time] \\n\\n   \n\nVariables:\n - [!date]\n - [!time]"/>
 
 
         <EditTextPreference
             android:key="prefQaAppend"
             android:title="Append"
             android:summary="Added after the data"
-            android:dialogMessage="Markdown appended after the sent data.\n\nUse \\n for a new line. "/>
+            android:defaultValue="\\n\\n\\n---"
+            android:dialogMessage="Markdown text appended immediately after the sent data.\n\nUse \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!date]\n - [!time]"/>
 
 
-<!--
+<!-- //this was going to be by obsidian:// uri
         <SwitchPreference
             android:defaultValue="true"
             android:key="discreetMode"
@@ -49,11 +51,8 @@
 
             app:enabled="false"
             />
--->
 
-    </PreferenceCategory>
-    <PreferenceCategory android:title="Debug">
-    <!--
+
             <EditTextPreference
                 android:defaultValue="Default value"
                 android:enabled="false"
@@ -62,7 +61,39 @@
                 android:title="Add file name (not discreet)"
                 app:enabled="false" />
 
-    -->
+
+-->
+
+    </PreferenceCategory>
+
+
+
+
+
+
+    <PreferenceCategory android:title="Misc">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="prefAmericanDate"
+            android:title="Use American date format"
+            android:summary="Use month-first date format\n - ON for month-first (12-20-2022) \n - OFF for day-first (20-12-2022)"
+            android:enabled="false"
+
+            />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref12hrTime"
+            android:title="Use am/pm time format"
+            android:summary="Use 12-hour time format \n - ON for am/pm (10:30 pm)\n - OFF for 24-hour (20:30)"
+            android:enabled="false"
+/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Debug">
+
 
 
         <Preference

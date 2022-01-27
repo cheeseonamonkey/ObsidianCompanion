@@ -61,7 +61,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             public boolean onPreferenceClick(Preference preference)
             {
 
-                String[] perms = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.MANAGE_EXTERNAL_STORAGE"};
+                String[] perms = {"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.MANAGE_EXTERNAL_STORAGE", "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS"};
 
 
                 requestPermissions(perms, REQUEST_PERMISSIONS);
@@ -133,8 +133,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
         switch(requestCode)
         {
 
-            //choose appending file result
+            //
+            //choose QuickAdd file
             case CHOOSE_APPEND_FILE:
+
+
+        /*
+        information on chosen URI that might be useful later:
+
+        String src = uri.getPath();
+        Log.d("a", "GETPATH" + src);
+
+        // Get uri related document id.
+        String documentId = DocumentsContract.getDocumentId(uri);
+        Log.d("a", "doc id - " + documentId);
+
+        // Get uri authority.
+        String uriAuthority = uri.getAuthority();
+        Log.d("a", "uriauthority" + uriAuthority);
+
+        File f = Environment.getExternalStorageDirectory();
+        Log.d("t", "external storage dir1: " + f.getAbsolutePath());
+        Log.d("t", "external storage dir2: " + f.getPath());
+
+        File f2 = new File(uri.toString());
+        Log.d("asdf", "file 2 output - " + f2.getAbsolutePath());
+
+        */
+
 
                 //file pick:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -155,13 +181,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 //
 
 
-                //end choose append file
-                break;
+              break;
+              //end choose QuickAdd file
 
 
 default: break;
 
-        }
+
+
+
+        }//ends switch of activityResult requestCode
 
 
 
@@ -170,25 +199,7 @@ default: break;
 
 
 
-/*
-        String src = uri.getPath();
-        Log.d("a", "GETPATH" + src);
 
-        // Get uri related document id.
-        String documentId = DocumentsContract.getDocumentId(uri);
-        Log.d("a", "doc id - " + documentId);
-
-        // Get uri authority.
-        String uriAuthority = uri.getAuthority();
-        Log.d("a", "uriauthority" + uriAuthority);
-
-        File f = Environment.getExternalStorageDirectory();
-        Log.d("t", "external storage dir1: " + f.getAbsolutePath());
-        Log.d("t", "external storage dir2: " + f.getPath());
-
-        File f2 = new File(uri.toString());
-        Log.d("asdf", "file 2 output - " + f2.getAbsolutePath());
-*/
 
 
 
@@ -223,8 +234,16 @@ default: break;
             int result = ContextCompat.checkSelfPermission(getContext(), WRITE_EXTERNAL_STORAGE);
             //int result1 = ContextCompat.checkSelfPermission(getContext(), MANAGE_EXTERNAL_STORAGE);
 
-            Toast.makeText(getContext(), "permission result: " + result, Toast.LENGTH_SHORT).show();
-            Log.d("TAG", "onRequestPermissionsResult: " + result);
+            if(result == 0)
+            {
+                Toast.makeText(getContext(), "permission accepted", Toast.LENGTH_SHORT).show();
+                Log.d("", "permission accepted ");
+            }
+            else if(result == -1)
+            {
+                Toast.makeText(getContext(), "permission denied", Toast.LENGTH_SHORT).show();
+                Log.d("", "permission denied ");
+            }
 
             break;
 

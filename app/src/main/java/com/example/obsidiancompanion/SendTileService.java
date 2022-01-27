@@ -9,11 +9,14 @@ import android.net.Uri;
 import android.os.Environment;
 import android.service.quicksettings.TileService;
 import android.util.Log;
+import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethod;
 import android.widget.Toast;
 
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
+import com.example.obsidiancompanion.ui.InputDialogActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.DataOutputStream;
@@ -25,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 public class SendTileService extends TileService
 {
 
+    final int QUICK_ADD_DIALOG = 31;
 
 
     @Override
@@ -46,41 +50,20 @@ public class SendTileService extends TileService
     public void onClick()
     {
 
-/*
-        String a = runSh("cat > asdf3.txt");
-        Log.d("", "onClick: " + a);
-
-        a = runSh("cat > /sdcard/asdf4.txt");
-        Log.d("", "onClick: " + a);
-
-        a = runSh("cat > /storage/emulated/0/download/asdf5.txt");
-        Log.d("", "onClick: " + a);
-
- */
-
-
-        //makes dir:
-        //runSh("mkdir /storage/emulated/0/Download/testingdir6");
-
-
-/*
-        runSh("system/bin/cat > /storage/emulated/0/Download/asdf13.txt");
-        runSh("sh system/bin/cat > /storage/emulated/0/Download/asdf14.txt");
-        runSh("cat > /storage/emulated/0/Download/asdf15.txt");
-
-        runSh("/bin/sh cat > /storage/emulated/0/Download/asdf16.txt");
-*/
-
-
-
-
-
-
-
-
-
         try {
 
+            //closes notif tray:
+            Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            closeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getApplicationContext().sendBroadcast(closeIntent);
+
+            //dialog for entry:
+            Intent dialogIntent = new Intent(getApplicationContext(), InputDialogActivity.class);
+            dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getApplicationContext().startActivity(dialogIntent);
+
+
+            //writes:
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String appendContentUri = prefs.getString("obsCom_appendContentUri", null);//If there is no key found null will be the default value.
 
