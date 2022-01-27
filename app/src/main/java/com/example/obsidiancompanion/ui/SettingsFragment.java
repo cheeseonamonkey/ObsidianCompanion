@@ -89,7 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 chooseFile.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
                 chooseFile = Intent.createChooser(chooseFile, "Choose a file");
-                startActivityForResult(chooseFile, CHOOSE_APPEND_FILE);
+                 startActivityForResult(chooseFile, CHOOSE_APPEND_FILE);
 
                 return true;
             }
