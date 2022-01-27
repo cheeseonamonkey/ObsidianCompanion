@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<!--
+    <Preference
+        android:key="pref_static_field_key"
+        android:selectable="false"
+        android:persistent="false"
+        android:summary="(long-press an option for help)"/>
+-->
+
+    <PreferenceCategory android:title="QuickAdd">
+
+
+
+        <Preference
+            android:key="prefRequestPermissions"
+            android:title="Request permissions"
+            android:summary="Permissions required for QuickAdd"/>
+
+
+        <Preference
+            android:key="prefSetDiscreetFile"
+            android:title="Set appending file"
+            android:summary="Select file in vault to QuickAdd to"/>
+
+
+
+        <EditTextPreference
+            android:key="prefQaPrepend"
+            android:title="Prepend"
+            android:summary="Added before the data"
+            android:dialogMessage="Markdown prepended before the sent data.\n\nUse \\n for a new line. "/>
+
+
+        <EditTextPreference
+            android:key="prefQaAppend"
+            android:title="Append"
+            android:summary="Added after the data"
+            android:dialogMessage="Markdown appended after the sent data.\n\nUse \\n for a new line. "/>
+
+
+<!--
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="discreetMode"
+            android:summary="Discreet appending will not require Obsidian to open in the foreground before writing to a file"
+            android:title="Use discreet file appending"
+
+            app:enabled="false"
+            />
+-->
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Debug">
+    <!--
+            <EditTextPreference
+                android:defaultValue="Default value"
+                android:enabled="false"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="Add file name (not discreet)"
+                app:enabled="false" />
+
+    -->
+
+
+        <Preference
+            android:key="preferenceTestShell"
+            android:title="Test shell" />
+        <Preference
+            android:key="preferenceTestFile"
+            android:title="Test file" />
+    </PreferenceCategory>
+</PreferenceScreen>

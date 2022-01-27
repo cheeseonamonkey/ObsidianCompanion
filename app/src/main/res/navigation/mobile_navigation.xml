@@ -7,9 +7,8 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.obsidiancompanion.ui.homeTab.SettingsTabFragment"
-        android:label="Settings"
-        tools:layout="@layout/settings_tab_fragment" />
+        android:name="com.example.obsidiancompanion.ui.SettingsFragment"
+        android:label="Settings" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
