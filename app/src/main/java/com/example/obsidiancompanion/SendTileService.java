@@ -53,9 +53,12 @@ public class SendTileService extends TileService
         try {
 
             //closes notif tray:
+            /*
             Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             closeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getApplicationContext().sendBroadcast(closeIntent);
+
+             */
 
             //dialog for entry:
             Intent dialogIntent = new Intent(getApplicationContext(), InputDialogActivity.class);

@@ -35,6 +35,8 @@ public class InputDialogActivity extends AppCompatActivity
 
         binding = InputDialogActivityBinding.inflate(getLayoutInflater());
 
+        setContentView(binding.getRoot());
+
         //btnSend
         binding.btnSend.setOnClickListener(new View.OnClickListener()
         {
@@ -83,7 +85,7 @@ public class InputDialogActivity extends AppCompatActivity
 
 
 
-        setContentView(binding.getRoot());
+
 
 
 
