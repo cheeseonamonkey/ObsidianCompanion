@@ -81,7 +81,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             public boolean onPreferenceClick(Preference preference)
             {
                 Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                chooseFile.setType("text/plain");
+                chooseFile.setType("text/markdown");
 
 
                 chooseFile.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);

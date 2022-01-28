@@ -62,8 +62,10 @@ public class SendTileService extends TileService
             dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getApplicationContext().startActivity(dialogIntent);
 
+/*
+            //writes - done in dialog activity now
 
-            //writes:
+
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String appendContentUri = prefs.getString("obsCom_appendContentUri", null);//If there is no key found null will be the default value.
 
@@ -87,7 +89,7 @@ public class SendTileService extends TileService
 
             Toast.makeText(this,"Text appended",Toast.LENGTH_LONG).show();
 
-
+*/
 
         } catch (Exception exc) {
             //if caught
