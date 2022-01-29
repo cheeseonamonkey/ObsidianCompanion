@@ -1,29 +1,11 @@
 package com.example.obsidiancompanion;
 
-import static androidx.core.app.ActivityCompat.startActivityForResult;
-
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Environment;
 import android.service.quicksettings.TileService;
 import android.util.Log;
-import android.view.inputmethod.InputConnection;
-import android.view.inputmethod.InputMethod;
 import android.widget.Toast;
 
-import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
-
-import com.example.obsidiancompanion.ui.InputDialogActivity;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
+import com.example.obsidiancompanion.ui.inputDialog.InputDialogActivity;
 
 public class SendTileService extends TileService
 {
@@ -63,10 +45,10 @@ public class SendTileService extends TileService
             //dialog for entry:
             Intent dialogIntent = new Intent(getApplicationContext(), InputDialogActivity.class);
             dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            getApplicationContext().startActivity(dialogIntent);
+            getBaseContext().startActivity(dialogIntent);
 
 /*
-            //writes - done in dialog activity now
+            //writes - this is done in dialog activity now
 
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
