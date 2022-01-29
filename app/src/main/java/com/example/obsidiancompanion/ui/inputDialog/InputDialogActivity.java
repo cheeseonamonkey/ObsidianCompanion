@@ -51,7 +51,7 @@ public class InputDialogActivity extends AppCompatActivity
 
                     //load the saved content URI:
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    String appendContentUri = prefs.getString("obsCom_appendContentUri", null);//If there is no key found null will be the default value.
+                    String appendContentUri = prefs.getString("obsCom_QuickAddFileUri", null);//If there is no key found null will be the default value.
 
                     if(appendContentUri == null)
                         throw new Exception("File not yet chosen.");
@@ -86,7 +86,7 @@ public class InputDialogActivity extends AppCompatActivity
 
                 }catch(Exception exc)
                 {
-                    Log.d("error", "ERROR - " + exc.getMessage());
+                    Log.d("error", "ERROR 421 in input dialog - " + exc.getMessage());
                 }
 
 

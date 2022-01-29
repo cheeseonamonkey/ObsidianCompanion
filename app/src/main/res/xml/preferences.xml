@@ -95,12 +95,18 @@
     <PreferenceCategory android:title="Debug">
 
 
-
+<!--
         <Preference
-            android:key="preferenceTestShell"
+            android:key="prefTestShell"
             android:title="Test shell" />
+-->
         <Preference
-            android:key="preferenceTestFile"
+            android:key="prefDebugTestFile"
             android:title="Test file" />
+        <Preference
+            android:key="prefDebugLogAllPrefs"
+            android:title="Log all saved prefs" />
+
     </PreferenceCategory>
+    
 </PreferenceScreen>

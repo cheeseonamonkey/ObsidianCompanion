@@ -27,10 +27,7 @@ import androidx.preference.PreferenceManager;
 
 import com.example.obsidiancompanion.MainActivity;
 import com.example.obsidiancompanion.R;
-
-
-
-
+import com.example.obsidiancompanion.classes.Processor;
 
 
 import java.io.File;
@@ -48,9 +45,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
     final int REQUEST_ALL_FILE_PERMISSION = 18;
 
     final int CHOOSE_APPEND_FILE = 20;
-
-    final int SET_PREPEND_PP = 21;
-    final int SET_APPEND_PP = 22;
 
     //todo: refactor preference saving/loading into a (static?) util class
 
@@ -112,26 +106,35 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 
 
+
+
+
         //
         //set prepend postprocessing
-        findPreference("prefQaPrepend").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        findPreference("prefQaPrepend").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
         {
             @Override
-            public boolean onPreferenceClick(Preference preference)
+            public boolean onPreferenceChange(Preference preference, Object newValue)
             {
+
+
+                Processor.setPostProcessingStr(getContext(), newValue.toString(), Processor.PREPEND_PREF_CHOOSER);
+
                 return true;
+
             }
         });
 
 
-
         //
         //set append postprocessing
-        findPreference("prefQaAppend").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        findPreference("prefQaAppend").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener()
         {
             @Override
-            public boolean onPreferenceClick(Preference preference)
+            public boolean onPreferenceChange(Preference preference, Object newValue)
             {
+                Processor.setPostProcessingStr(getContext(), newValue.toString(), Processor.APPEND_PREF_CHOOSER);
+
                 return true;
             }
         });
@@ -193,49 +196,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
 
-                editor.putString("obsCom_appendContentUri", contentUri.toString());
+                editor.putString("obsCom_QuickAddFileUri", contentUri.toString());
                 editor.commit();
 
                 //debug to make sure pref got saved
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String name = prefs.getString("obsCom_appendContentUri", null);//If there is no YOURKEY found null will be the default value.
+                String name = prefs.getString("obsCom_QuickAddFileUri", null);//If there is no YOURKEY found null will be the default value.
                 Log.d("TAG", "saved appendContentUri to default settingPrefs: " + name);
                 //
 
 
               break;
               //end choose QuickAdd file
-
-
-            //
-            //prepend post processing changed
-            case SET_PREPEND_PP:
-
-                //you are here - just set these PP vars up
-
-
-
-
-
-
-
-
-
-
-
-                break;
-            //end prepend pp case
-
-
-
-            //
-            //append post processing changed
-            case SET_APPEND_PP:
-
-                break;
-            //end append pp case
-
-
 
 
 
