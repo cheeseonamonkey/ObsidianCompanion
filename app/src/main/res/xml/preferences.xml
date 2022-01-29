@@ -13,6 +13,7 @@
 
 
 
+
         <Preference
             android:key="prefRequestPermissions"
             android:title="Request permissions"
@@ -21,25 +22,14 @@
 
         <Preference
             android:key="prefSetDiscreetFile"
-            android:title="Set appending file"
-            android:summary="Select file in vault to QuickAdd to"/>
+            android:title="Set default QuickAdd file"
+            android:summary="Select default file in vault to target QuickAdd to."/>
+
+        <Preference
+            android:key="prefQaDocsButton"
+            android:title="QuickAdd Docs" />
 
 
-
-        <EditTextPreference
-            android:key="prefQaPrepend"
-            android:title="Prepend"
-            android:summary="Added before the data"
-            android:defaultValue="\\n[!date] [!time]\\n\\n"
-            android:dialogMessage="Markdown text prepended immediately before the sent data.  Use \\n for a new line. \n\nDefault: \\n[!date] [!time] \\n\\n   \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
-
-
-        <EditTextPreference
-            android:key="prefQaAppend"
-            android:title="Append"
-            android:summary="Added after the data"
-            android:defaultValue="\\n\\n\\n---"
-            android:dialogMessage="Markdown text appended immediately after the sent data. Use \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
 
 
 <!-- //not discreet mode by obsidian:// uri
@@ -66,13 +56,42 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="  QuickAdd Post-processing:">
 
+        <EditTextPreference
+            android:key="prefQaPrepend"
+            android:title="Prepend"
+            android:summary="Added before the data"
+            android:defaultValue="\\n[!date] [!time]\\n\\n"
+            android:dialogMessage="Markdown text prepended immediately before the sent data.  Use \\n for a new line. \n\nDefault: \\n[!date] [!time] \\n\\n   \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
+
+
+        <EditTextPreference
+            android:key="prefQaAppend"
+            android:title="Append"
+            android:summary="Added after the data"
+            android:defaultValue="\\n\\n\\n---"
+            android:dialogMessage="Markdown text appended immediately after the sent data. Use \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
+
+    </PreferenceCategory>
 
 
 
 
     <PreferenceCategory android:title="Misc">
 
+
+
+
+        <!-- disabled -->
+        <Preference
+            android:key="prefSetVaultFolder"
+            android:title="Set vault folder"
+            android:summary="Select the first/default folder you will open to when selecting a file. "
+            android:enabled="false"/>
+
+
+        <!-- disabled -->
         <SwitchPreference
             android:defaultValue="true"
             android:key="prefAmericanDate"
@@ -82,6 +101,8 @@
 
             />
 
+
+        <!-- disabled -->
         <SwitchPreference
             android:defaultValue="true"
             android:key="pref12hrTime"
@@ -90,24 +111,38 @@
             android:enabled="false"
 />
 
+
+
+
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Debug">
 
 
 <!--
-        <Preference
-            android:key="prefTestShell"
-            android:title="Test shell" />
+    <PreferenceCategory android:title="  Debug">
 
-        <Preference
-            android:key="prefDebugTestFile"
-            android:title="Test file" />
+
+
+                <Preference
+                    android:key="prefTestShell"
+                    android:title="Test shell" />
+
+                <Preference
+                    android:key="prefDebugTestFile"
+                    android:title="Test file" />
+
+
         <Preference
             android:key="prefDebugLogAllSavedPrefs"
-            android:title="Log all saved prefs" />
-        -->
+            android:title="Log all saved prefs"/>
+
+        <Preference
+            android:key="prefDebugLogAllPermissions"
+            android:title="Log every permissions status"/>
+
+
 
     </PreferenceCategory>
+-->
 
 </PreferenceScreen>

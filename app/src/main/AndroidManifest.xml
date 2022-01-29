@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.obsidiancompanion">
+
 
     <uses-permission android:name="android.permission.ACTION_OPEN_DOCUMENT" />
     <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY"/>
 
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/obscommainicon"
+
+        android:icon="@xml/adaptive_icon"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/obscommainicon"
+        android:roundIcon="@xml/adaptive_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.ObsidianCompanion"
-        android:requestLegacyExternalStorage="true"
-        >
-
+        android:requestLegacyExternalStorage="true">
 
         <activity
             android:theme="@style/Theme.AppCompat.Dialog"

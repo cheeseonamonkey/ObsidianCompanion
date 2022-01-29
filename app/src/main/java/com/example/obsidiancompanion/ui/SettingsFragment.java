@@ -151,6 +151,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     activity result
      */
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -218,15 +219,29 @@ public class SettingsFragment extends PreferenceFragmentCompat
             //ActivityResult: ALL_FILES_ACCESS_PERMISSION
             case REQUEST_ALL_FILE_PERMISSION:
 
-                Log.d("TAG", "ActivityResult - All file permission");
 
+
+                Log.d("TAG", "ActivityResult - All files permission");
+
+                if(Environment.isExternalStorageManager())
+                {
+                    Toast.makeText(getContext(), "Accepted storage permission!", Toast.LENGTH_SHORT).show();
+                    Log.d("permission", "storage permission accepted ");
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Declined storage permission!", Toast.LENGTH_SHORT).show();
+                    Log.d("permission", "storage permission denied ");
+                }
 
 
                 String[] perms = {
                         "android.permission.WRITE_EXTERNAL_STORAGE",
                         "android.permission.MANAGE_EXTERNAL_STORAGE",
                         "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS",
-                        "android.permission.ACTION_OPEN_DOCUMENT"
+                        "android.permission.ACTION_OPEN_DOCUMENT",
+                        "android.permission.READ_USER_DICTIONARY",
+                        "android.permission.WRITE_USER_DICTIONARY"
                                 };
 
                 requestPermissions(perms, REQUEST_PERMISSIONS);
@@ -295,7 +310,19 @@ default: break;
             results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.MANAGE_EXTERNAL_STORAGE")));
             results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS")));
             results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.VIBRATE")));
+            results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.READ_USER_DICTIONARY")));
+            results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.WRITE_USER_DICTIONARY")));
 
+                if(results.size() > 0 && results.get(0) == String.valueOf(0))
+                {
+                    Toast.makeText(getContext(), "Accepted write permission!", Toast.LENGTH_SHORT).show();
+                    Log.d("permission", "write permission accepted ");
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Declined write permission!", Toast.LENGTH_SHORT).show();
+                    Log.d("permission", "write permission denied ");
+                }
 
             results.add(String.valueOf(Environment.isExternalStorageManager()));
 
@@ -303,28 +330,20 @@ default: break;
 
 
 
-String strPermissions = "";
+                String strPermissions = "";
 
-                Log.d("TAG", "Permissions:");
+
                 for (int i = 0; i < results.size(); i++)
                 {
                     strPermissions +=  results.get(i).toString() + ", " ;
                 }
 
+                Log.d("TAG", "Permissions:");
                 Log.d("TAG", strPermissions);
 
 
 
-            if(Environment.isExternalStorageManager())
-            {
-                Toast.makeText(getContext(), "accepted storage permission!", Toast.LENGTH_SHORT).show();
-                Log.d("permission", "storage permission accepted ");
-            }
-            else
-            {
-                Toast.makeText(getContext(), "declined storage permission!", Toast.LENGTH_SHORT).show();
-                Log.d("permission", "storage permission denied ");
-            }
+
 
 
             break;

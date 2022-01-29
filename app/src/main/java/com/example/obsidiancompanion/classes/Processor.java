@@ -225,7 +225,7 @@ public class Processor
         {
             Log.d("TAG", String.valueOf(APPEND_PREF_KEY) + " pref not saved - setting default.");
 
-            setPostProcessingStr(context, "\\\\n\\\\n\\\\n---" , APPEND_PREF_CHOOSER);
+            setPostProcessingStr(context, "\\n\\n\\n---" , APPEND_PREF_CHOOSER);
 
         }
         if( ! isSet_PREPEND_PREF_KEY)

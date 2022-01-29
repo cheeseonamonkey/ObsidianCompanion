@@ -39,7 +39,7 @@ public class InputDialogActivity extends AppCompatActivity
         setContentView(binding.getRoot());
 
 
-        binding.lblQuickAddFile.setText( "QuickAdding to file:  "  + Processor.PrefWriter.readPref(getApplicationContext(), Processor.FILE_NAME_PREF_KEY).toString());
+        binding.lblQuickAddFile.setText( "QuickAdding to file:    "  + Processor.PrefWriter.readPref(getApplicationContext(), Processor.FILE_NAME_PREF_KEY).toString());
 
         binding.btnSend.setOnClickListener(new View.OnClickListener()
         {
@@ -101,7 +101,7 @@ public class InputDialogActivity extends AppCompatActivity
                         strWrite = Processor.process(strWrite, getApplicationContext());
 
                         //write to file
-                        Log.d("TAG", "Attempting to QuickAdd:\n\t\t -data to write: " + strWrite + "\t\t -file's content uri: " + uri.toString());
+                        Log.d("TAG", "Attempting to QuickAdd:\n\t\t -data to write: " + strWrite + "\n\t\t -file's content uri: " + uri.toString());
                         osw.write(strWrite);
                         osw.flush();
                         osw.close();
