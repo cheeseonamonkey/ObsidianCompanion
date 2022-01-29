@@ -3,23 +3,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#26834CBA">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/lblQuickAddFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:padding="1dp"
+            android:text="QuickAdding to file:  "
+            android:textSize="13sp" />
+
         <EditText
             android:id="@+id/txtSendData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:ems="20"
             android:fitsSystemWindows="false"
+            android:fontFamily="serif-monospace"
             android:gravity="start|top"
             android:inputType="textMultiLine"
-            android:lines="4"
+            android:lines="6"
+            android:nestedScrollingEnabled="true"
             android:singleLine="false"
+            android:textScaleX="0.9"
+            android:textSize="15sp"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <LinearLayout
@@ -27,7 +41,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnPasteToTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"

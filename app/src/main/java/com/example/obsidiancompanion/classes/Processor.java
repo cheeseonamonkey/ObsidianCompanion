@@ -1,11 +1,14 @@
 package com.example.obsidiancompanion.classes;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
@@ -27,6 +30,7 @@ public class Processor
     public static final String PREPEND_PREF_KEY = "obscom_ppPrepend";
     public static final String FILE_URI_PREF_KEY = "obscom_QuickAddFileUri";
     public static final String FIRST_RUN_PREF_KEY = "obscom_QuickAddFileUri";
+    public static final String FILE_NAME_PREF_KEY = "obscom_QuickAddFileName";
 
     public boolean firstRun = false;
 
@@ -166,6 +170,48 @@ public class Processor
     }
 
 
+
+    public static String getClipBoard(Context context)
+    {
+        try
+        {
+
+
+            // Declaring the clipboard manager
+            ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
+
+            boolean hasClip = clipboardManager.hasPrimaryClip();
+
+            Log.d("TAG", "has clipboard contents: " + hasClip);
+
+            if(hasClip)
+            {
+                ClipData clipData = clipboardManager.getPrimaryClip();
+
+
+                ClipData.Item clipItem = clipData.getItemAt(0);
+
+                String strClip = clipItem.getText().toString();
+
+                Log.d("TAG", "got from clipboard: " + strClip);
+                return strClip;
+
+            }else
+            {
+                throw new Exception("Error 704 getclipboard - ");
+            }
+
+        }catch(Exception exc)
+        {
+            Log.d("TAG", "Error 703 - " + exc.getMessage());
+            Toast.makeText(context, "Couldn't get clipboard.", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+
+    }
+
+
+
     public static boolean initPrefs(Context context)
     {
         //if prefs aren't yet set, sets the defaults
@@ -173,6 +219,7 @@ public class Processor
         boolean isSet_APPEND_PREF_KEY = PrefWriter.isPrefSet(context, APPEND_PREF_KEY);
         boolean isSet_PREPEND_PREF_KEY = PrefWriter.isPrefSet(context, PREPEND_PREF_KEY);
         boolean isSet_FILE_URI_PREF_KEY = PrefWriter.isPrefSet(context, FILE_URI_PREF_KEY);
+        boolean isSet_FILE_NAME_PREF_KEY = PrefWriter.isPrefSet(context, FILE_NAME_PREF_KEY);
 
         if( ! isSet_APPEND_PREF_KEY)
         {
@@ -189,11 +236,15 @@ public class Processor
         }
         if( ! isSet_FILE_URI_PREF_KEY)
         {
-
+            //don't set a default
             Log.d("TAG", String.valueOf(FILE_URI_PREF_KEY) + " pref not saved - user must choose the file!");
-            setPostProcessingStr(context, "NOTSET:", PREPEND_PREF_CHOOSER);
 
 
+        }
+        if( ! isSet_FILE_NAME_PREF_KEY )
+        {
+            Log.d("TAG", String.valueOf(FILE_URI_PREF_KEY) + " pref not saved - setting default filename");
+            Processor.PrefWriter.writePref(context, FILE_NAME_PREF_KEY, "NOTSET:" + FILE_NAME_PREF_KEY, DEFAULT_PREF_WRITE_MODE);
         }
 
 
@@ -206,20 +257,20 @@ public class Processor
         return true;
     }
 
-    public static void VibrateSmol(Context context)
+    public static void vibrateSmol(Context context)
     {
         try
         {
             Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
-            // Vibrate for 300 milliseconds:
+            // Vibrate for 50 milliseconds:
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             {
-                v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+                v.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
             } else
             {
                 //deprecated in API 26
-                v.vibrate(300);
+                v.vibrate(50);
             }
         }catch(Exception exc)
         {
@@ -228,9 +279,11 @@ public class Processor
     }
 
 
-    public static boolean setQuickAddFileLocation(Context context, String uriStringData)
+    public static boolean setQuickAddFileLocation(Context context, String uriData, String fileName)
     {
-        PrefWriter.writePref(context, FILE_URI_PREF_KEY, uriStringData, DEFAULT_PREF_WRITE_MODE);
+        PrefWriter.writePref(context, FILE_URI_PREF_KEY, uriData, DEFAULT_PREF_WRITE_MODE);
+        PrefWriter.writePref(context, FILE_NAME_PREF_KEY, fileName, DEFAULT_PREF_WRITE_MODE);
+
         return true;
     }
 

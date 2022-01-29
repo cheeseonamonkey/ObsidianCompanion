@@ -85,15 +85,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 chooseFile.setType("text/markdown");
 
-
-
                 //chooseFile.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 chooseFile.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
                 chooseFile.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                //chooseFile.addFlags(Intent.flag);
+
+                chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
+
 
 
                 chooseFile = Intent.createChooser(chooseFile, "Choose a file");
+
                  startActivityForResult(chooseFile, CHOOSE_APPEND_FILE);
 
                 return true;
@@ -186,12 +188,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 //file pick
                 super.onActivityResult(requestCode, resultCode, data);
 
+
+
+
                 //URI:
                 Uri contentUri = data.getData();
                 Log.d("a", "uri - " + data.getData().toString());
 
+                String[] strDirs = contentUri.getPath().split("/");
+                String srcDir = strDirs[strDirs.length - 1];
+                srcDir = srcDir.replace(".md", "");
+
                 //save to prefs
-                Processor.setQuickAddFileLocation(getContext(), contentUri.toString());
+                Processor.setQuickAddFileLocation(getContext(), contentUri.toString(), srcDir);
+
 
                 Toast.makeText(getContext(), "File set!", Toast.LENGTH_SHORT).show();
 

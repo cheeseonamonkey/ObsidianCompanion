@@ -57,14 +57,14 @@ public class SendTileService extends TileService
 
 
 
-
-            Toast.makeText(this,"Text appended",Toast.LENGTH_LONG).show();
+            //debug output
+            //Toast.makeText(this,"QuickAdding text...",Toast.LENGTH_LONG).show();
 
 
 
         } catch (Exception exc) {
             //if caught
-            Toast.makeText(this, "Text Could not be added",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Text Could not be added - " + exc.getMessage() ,Toast.LENGTH_LONG).show();
 
 
 

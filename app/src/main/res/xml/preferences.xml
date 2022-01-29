@@ -39,10 +39,10 @@
             android:title="Append"
             android:summary="Added after the data"
             android:defaultValue="\\n\\n\\n---"
-            android:dialogMessage="Markdown text appended immediately after the sent data.\n\nUse \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
+            android:dialogMessage="Markdown text appended immediately after the sent data. Use \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
 
 
-<!-- //this was going to be by obsidian:// uri
+<!-- //not discreet mode by obsidian:// uri
         <SwitchPreference
             android:defaultValue="true"
             android:key="discreetMode"
