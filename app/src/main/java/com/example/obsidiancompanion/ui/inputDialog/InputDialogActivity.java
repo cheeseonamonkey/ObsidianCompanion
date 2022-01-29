@@ -1,16 +1,14 @@
 package com.example.obsidiancompanion.ui.inputDialog;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
-
 import android.content.ContentResolver;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.obsidiancompanion.classes.Processor;
 import com.example.obsidiancompanion.databinding.InputDialogActivityBinding;
@@ -49,18 +47,29 @@ public class InputDialogActivity extends AppCompatActivity
 
                     Log.d("TAG", "QuickAdding now!");
 
-                    //load the saved content URI:
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    String appendContentUri = prefs.getString("obsCom_QuickAddFileUri", null);//If there is no key found null will be the default value.
 
-                    if(appendContentUri == null)
+
+
+
+
+
+                    //load the URI from the saved file location
+                    String uriStr = Processor.PrefWriter.readPref(getApplicationContext(), Processor.FILE_URI_PREF_KEY);
+
+                    Log.d("TAG", "uri string loaded: " + uriStr);
+
+                    if( ! Processor.PrefWriter.isPrefSet(getApplicationContext(), Processor.FILE_URI_PREF_KEY))
+                    {
+                        Toast.makeText(getApplicationContext(), "Error - file not yet chosen!", Toast.LENGTH_SHORT).show();
                         throw new Exception("File not yet chosen.");
+                    }
 
-                    Log.d("TAG", "Content uri:  " + appendContentUri + "...");
 
-                    //get the URI from the saved file location
-                    Uri uri = Uri.parse(appendContentUri);
-                    //Uri uri = Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2Fsample3.txt");
+                    Uri uri = Uri.parse(Processor.PrefWriter.readPref(getApplicationContext(), Processor.FILE_URI_PREF_KEY));
+
+                    //log the gotten URI
+                    Log.d("TAG", "Selected file's content uri:\n\t\t - " + uri.toString());
+
 
                     //use ContentResolver to work with content URI:
                     ContentResolver contentResolver = getApplicationContext().getContentResolver();
@@ -75,7 +84,7 @@ public class InputDialogActivity extends AppCompatActivity
                     strWrite = Processor.process(strWrite, getApplicationContext());
 
                     //write to file
-                    Log.d("TAG", "\tAttempting to write data:  \n" + strWrite);
+                    Log.d("TAG", "Attempting to QuickAdd:\n\t\t -data to write: " + strWrite + "\t\t -file's content uri: " + uri.toString());
                     osw.write(strWrite);
                     osw.flush();
                     osw.close();
@@ -86,6 +95,7 @@ public class InputDialogActivity extends AppCompatActivity
 
                 }catch(Exception exc)
                 {
+
                     Log.d("error", "ERROR 421 in input dialog - " + exc.getMessage());
                 }
 

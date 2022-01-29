@@ -2,9 +2,11 @@ package com.example.obsidiancompanion.classes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import java.time.LocalDate;
@@ -20,17 +22,88 @@ public class Processor
     public final static int DEFAULT_PREF_WRITE_MODE = 21;
     public final static int LOCAL_PREF_WRITE_MODE = 22;
 
+    //preference (persistent storage) keys:
+    public static final String APPEND_PREF_KEY = "obscom_ppAppend";
+    public static final String PREPEND_PREF_KEY = "obscom_ppPrepend";
+    public static final String FILE_URI_PREF_KEY = "obscom_QuickAddFileUri";
+    public static final String FIRST_RUN_PREF_KEY = "obscom_QuickAddFileUri";
+
+    public boolean firstRun = false;
+
+
+
     public static class PrefWriter
     {
-        public static final String APPEND_PREF_KEY = "obscom_ppAppend";
-        public static final String PREPEND_PREF_KEY = "obscom_ppPrepend";
-        public static final String FILE_URI_PREF_KEY = "obscom_QuickAddFileUri";
+        //read method is public, write method is private
+
+        public static boolean isPrefSet(Context context, String prefKey)
+        {
+            boolean boolOut = false;
+
+            try
+            {
+                String str = readPref(context, prefKey);
+
+                //not set
+                if(str == null || str.contains("NOTSET:"))
+                    return false;
+                else //is set
+                    return true;
+
+
+
+            }catch(Exception exc)
+            {
+                Log.d("TAG", "Processor error 518: (caught and handled in logic) in isPref():  " + exc.getMessage() );
+                return false;
+            }
+
+        }
+
+
+        public static String readPref(Context context, String prefKey)
+        {
+
+            try
+            {
+                        //default prefs only
+                        //if using local prefs, refactor like writePref()
+
+                        //get the pref
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+                        String strPref = prefs.getString(prefKey, null);//If there is no YOURKEY found null will be the default value.
+
+                        //if pref is set to something
+                        if(strPref != null)
+                        {
+                            Log.d("TAG", "Completed pref load:\n\t - key: " + prefKey + "\t - data (read back): " + strPref);
+                        }else
+                        {
+                            //pref not set
+                            Log.d("TAG", "Error 516 Pref load not set. Returning a NOTSET: value\n\t - key: " + prefKey + "\t - data (read back): " + strPref);
+                            return "NOTSET:" + prefKey;
+
+
+                        }
+                        //
+
+                       return strPref;
+                
+
+            }catch(Exception exc)
+            {
+
+                Log.d("error", "Error in Processor: " + exc.getMessage());
+                return "ERR" + "NOTSET:" + prefKey ;
+            }
+
+        }
 
         private static void writePref(Context context, String prefKey, String prefData, Integer PREF_WRITE_MODE )
         {
             try
             {
-
 
 
                 //default/public preferences
@@ -55,11 +128,15 @@ public class Processor
 
                         //debug logging to make sure pref got saved:
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                        String debugCallbackData = prefs.getString(prefKey, null);//If there is no YOURKEY found null will be the default value.
+
+                        //reads back the data to be sure it was saved
+                        String debugCallbackData = readPref(context, prefKey);
 
                         if(debugCallbackData == null)
-                            throw new Exception("Error 101 in Processor. ");
+                            throw new Exception("Error 101 in Processor - detected that the preference was not set on write");
 
+
+                        
                         Log.d("TAG", "Successfully saved pref:\n\t - key: " + prefKey + "\t - data (read back): " + debugCallbackData);
                         //
 
@@ -79,6 +156,8 @@ public class Processor
 
             }catch(Exception exc)
             {
+
+                
                 Log.d("error", "Error in Processor: " + exc.getMessage());
             }
 
@@ -87,23 +166,102 @@ public class Processor
     }
 
 
+    public static boolean initPrefs(Context context)
+    {
+        //if prefs aren't yet set, sets the defaults
+
+        boolean isSet_APPEND_PREF_KEY = PrefWriter.isPrefSet(context, APPEND_PREF_KEY);
+        boolean isSet_PREPEND_PREF_KEY = PrefWriter.isPrefSet(context, PREPEND_PREF_KEY);
+        boolean isSet_FILE_URI_PREF_KEY = PrefWriter.isPrefSet(context, FILE_URI_PREF_KEY);
+
+        if( ! isSet_APPEND_PREF_KEY)
+        {
+            Log.d("TAG", String.valueOf(APPEND_PREF_KEY) + " pref not saved - setting default.");
+
+            setPostProcessingStr(context, "\\\\n\\\\n\\\\n---" , APPEND_PREF_CHOOSER);
+
+        }
+        if( ! isSet_PREPEND_PREF_KEY)
+        {
+            Log.d("TAG", String.valueOf(PREPEND_PREF_KEY) + " pref not saved - setting default values!");
+
+            setPostProcessingStr(context, "\\n[!date] [!time]\\n\\n", PREPEND_PREF_CHOOSER);
+        }
+        if( ! isSet_FILE_URI_PREF_KEY)
+        {
+
+            Log.d("TAG", String.valueOf(FILE_URI_PREF_KEY) + " pref not saved - user must choose the file!");
+            setPostProcessingStr(context, "NOTSET:", PREPEND_PREF_CHOOSER);
+
+
+        }
+
+
+
+        String APPEND_PR = PrefWriter.readPref(context, APPEND_PREF_KEY);
+        String PREPEND_P = PrefWriter.readPref(context, PREPEND_PREF_KEY);
+        String FILE_URI_ = PrefWriter.readPref(context, FILE_URI_PREF_KEY);
+        String FIRST_RUN = PrefWriter.readPref(context, FIRST_RUN_PREF_KEY);
+
+        return true;
+    }
+
+    public static void VibrateSmol(Context context)
+    {
+        try
+        {
+            Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+            // Vibrate for 300 milliseconds:
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                v.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else
+            {
+                //deprecated in API 26
+                v.vibrate(300);
+            }
+        }catch(Exception exc)
+        {
+            Log.d("error", "VibrateSmol error - " + exc.getMessage());
+        }
+    }
+
+
+    public static boolean setQuickAddFileLocation(Context context, String uriStringData)
+    {
+        PrefWriter.writePref(context, FILE_URI_PREF_KEY, uriStringData, DEFAULT_PREF_WRITE_MODE);
+        return true;
+    }
+
     static String getQuickAddFileLocation(Context context)
     {
         try
         {
+
+
+
+
             //load from default prefs:
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            String strData = prefs.getString("obsCom_QuickAddFileUri", null);//If there is no key found null will be the default value.
+            String strPrefValue = Processor.PrefWriter.readPref(context, Processor.FILE_URI_PREF_KEY);
 
-            if (strData == null)
+
+            if(PrefWriter.isPrefSet(context, FILE_URI_PREF_KEY) == false)
+            {
                 throw new Exception("Error - File not yet set");
+            }
+            return strPrefValue;
 
-            return strData;
+
+
+
 
 
 
         }catch(Exception exc)
         {
+
+            
             Log.d("error", "Error in Processor: " + exc.getMessage());
             return null;
 
@@ -131,19 +289,21 @@ public class Processor
 
             case PREPEND_PREF_CHOOSER:
 
-                PrefWriter.writePref(context, PrefWriter.PREPEND_PREF_KEY, strSaveData, DEFAULT_PREF_WRITE_MODE);
+                PrefWriter.writePref(context, PREPEND_PREF_KEY, strSaveData, DEFAULT_PREF_WRITE_MODE);
                 return true;
 
 
             case APPEND_PREF_CHOOSER:
 
-                PrefWriter.writePref(context, PrefWriter.APPEND_PREF_KEY, strSaveData, DEFAULT_PREF_WRITE_MODE);
+                PrefWriter.writePref(context, APPEND_PREF_KEY, strSaveData, DEFAULT_PREF_WRITE_MODE);
                 return true;
 
 
 
 
             default:
+
+                
                 Log.d("error", "Wacky error 311 in set pref in Processor");
                 return false;
 
@@ -160,8 +320,8 @@ public class Processor
         {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            String ppPrepend = prefs.getString(PrefWriter.PREPEND_PREF_KEY, null);//If there is no key found null will be the default value.
-            String ppAppend = prefs.getString(PrefWriter.APPEND_PREF_KEY, null);//If there is no key found null will be the default value.
+            String ppPrepend = prefs.getString(PREPEND_PREF_KEY, null);//If there is no key found null will be the default value.
+            String ppAppend = prefs.getString(APPEND_PREF_KEY, null);//If there is no key found null will be the default value.
 
             if (ppPrepend == null)
                 throw new Exception("Error - No PostProcessing data set ");
@@ -173,6 +333,8 @@ public class Processor
 
         }catch(Exception exc)
         {
+
+            
             Log.d("error", "Error 103 in Processor: " + exc.getMessage());
             return null;
         }
@@ -182,10 +344,19 @@ public class Processor
 
     static String replaceVariables(String strIn, Context context)
     {
-        //todo: format these
+
         String strOut =
                 strIn.replace("[!date]", LocalDate.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy")))
-                        .replace("[!time]", LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mma")));
+                        .replace("[!time]", LocalTime.now().format(DateTimeFormatter.ofPattern("hh:mma")))
+                        .replace("[!empty]", "");
+
+
+        strOut = strOut.replace("\\n","\n");
+
+        strOut = strOut.replace("NOTSET:", "n0ts3t");
+
+
+
 
         return strOut;
     }
@@ -193,15 +364,17 @@ public class Processor
     public static String process(String strIn, Context context)
     {
 
-        //postprocessing:
         String strOut = strIn;
 
-        //read the saved preference strings to postprocess
+        //postprocessing:
+
+        //load the saved preference strings for postprocessing
         String[] postProcessingStrs = getSavedPostProcessingStrs(context);
 
         String strPrepend = postProcessingStrs[0];
         String strAppend = postProcessingStrs[1];
 
+        //append and prepending  - (do first to capture the rest of the formatting)
         strOut = strPrepend + strOut + strAppend;
 
         strOut = replaceVariables(strOut, context);

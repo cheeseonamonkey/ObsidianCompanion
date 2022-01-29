@@ -13,6 +13,7 @@ public class SendTileService extends TileService
     final int QUICK_ADD_DIALOG = 31;
 
 
+
     @Override
     public void onTileAdded()
     {
@@ -23,6 +24,10 @@ public class SendTileService extends TileService
 
         appendContentUri = prefs.getString("appendContentUri", null);
 */
+
+
+
+
         Log.d("TAG", "Tile Added");
 
     }
@@ -43,43 +48,28 @@ public class SendTileService extends TileService
              */
 
             //dialog for entry:
+            // - QuickAdding is accomplished in this activity
             Intent dialogIntent = new Intent(getApplicationContext(), InputDialogActivity.class);
             dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            //start inputDialogActivity for QuickAdding
             getBaseContext().startActivity(dialogIntent);
 
-/*
-            //writes - this is done in dialog activity now
-
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String appendContentUri = prefs.getString("obsCom_appendContentUri", null);//If there is no key found null will be the default value.
-
-
-            Toast.makeText(getApplicationContext(), "Appending to " + appendContentUri + "...", Toast.LENGTH_SHORT).show();
-
-
-            Uri uri = Uri.parse(appendContentUri);
-            //Uri uri = Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2Fsample3.txt");
-
-
-            getContentResolver().openOutputStream(uri, "wa");
-
-            OutputStreamWriter osw = new OutputStreamWriter(getContentResolver().openOutputStream(uri, "wa"));
-
-            osw.write("daaaataaaa\n");
-            osw.flush();
-            osw.close();
 
 
 
             Toast.makeText(this,"Text appended",Toast.LENGTH_LONG).show();
 
-*/
+
 
         } catch (Exception exc) {
             //if caught
             Toast.makeText(this, "Text Could not be added",Toast.LENGTH_LONG).show();
-            Log.d("TAG", "error" + exc);
+
+
+
+
+        Log.d("TAG", "error" + exc);
         }
 
 

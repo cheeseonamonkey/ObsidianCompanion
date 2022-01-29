@@ -31,7 +31,7 @@
             android:title="Prepend"
             android:summary="Added before the data"
             android:defaultValue="\\n[!date] [!time]\\n\\n"
-            android:dialogMessage="Markdown text prepended immediately before the sent data.  Use \\n for a new line. \n\nDefault: \\n[!date] [!time] \\n\\n   \n\nVariables:\n - [!date]\n - [!time]"/>
+            android:dialogMessage="Markdown text prepended immediately before the sent data.  Use \\n for a new line. \n\nDefault: \\n[!date] [!time] \\n\\n   \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
 
 
         <EditTextPreference
@@ -39,7 +39,7 @@
             android:title="Append"
             android:summary="Added after the data"
             android:defaultValue="\\n\\n\\n---"
-            android:dialogMessage="Markdown text appended immediately after the sent data.\n\nUse \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!date]\n - [!time]"/>
+            android:dialogMessage="Markdown text appended immediately after the sent data.\n\nUse \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
 
 
 <!-- //this was going to be by obsidian:// uri
@@ -99,14 +99,15 @@
         <Preference
             android:key="prefTestShell"
             android:title="Test shell" />
--->
+
         <Preference
             android:key="prefDebugTestFile"
             android:title="Test file" />
         <Preference
-            android:key="prefDebugLogAllPrefs"
+            android:key="prefDebugLogAllSavedPrefs"
             android:title="Log all saved prefs" />
+        -->
 
     </PreferenceCategory>
-    
+
 </PreferenceScreen>

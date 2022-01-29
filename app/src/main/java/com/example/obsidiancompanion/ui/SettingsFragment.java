@@ -1,41 +1,27 @@
 package com.example.obsidiancompanion.ui;
 
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.PermissionChecker;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
-import com.example.obsidiancompanion.MainActivity;
 import com.example.obsidiancompanion.R;
 import com.example.obsidiancompanion.classes.Processor;
 
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 
 public class SettingsFragment extends PreferenceFragmentCompat
@@ -46,9 +32,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     final int CHOOSE_APPEND_FILE = 20;
 
-    //todo: refactor preference saving/loading into a (static?) util class
 
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        Log.d("TAG", "onCreate: page load - initing all prefs...");
+
+        Processor.initPrefs(getContext());
+
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
@@ -165,7 +161,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
 
         /*
-        information on chosen URI that might be useful later:
+        information on chosen URI
 
         String src = uri.getPath();
         Log.d("a", "GETPATH" + src);
@@ -187,24 +183,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
         */
 
-                //file pick:
+                //file pick
                 super.onActivityResult(requestCode, resultCode, data);
 
-
+                //URI:
                 Uri contentUri = data.getData();
-                Log.d("a", "GETDATA " + data.getData().toString());
+                Log.d("a", "uri - " + data.getData().toString());
 
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+                //save to prefs
+                Processor.setQuickAddFileLocation(getContext(), contentUri.toString());
 
-                editor.putString("obsCom_QuickAddFileUri", contentUri.toString());
-                editor.commit();
-
-                //debug to make sure pref got saved
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String name = prefs.getString("obsCom_QuickAddFileUri", null);//If there is no YOURKEY found null will be the default value.
-                Log.d("TAG", "saved appendContentUri to default settingPrefs: " + name);
-                //
-
+                Toast.makeText(getContext(), "File set!", Toast.LENGTH_SHORT).show();
 
               break;
               //end choose QuickAdd file
@@ -227,8 +216,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
                         "android.permission.WRITE_EXTERNAL_STORAGE",
                         "android.permission.MANAGE_EXTERNAL_STORAGE",
                         "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS",
-                        "android.permission.ACTION_OPEN_DOCUMENT",
-                        "android.permission.MANAGE_MEDIA"
+                        "android.permission.ACTION_OPEN_DOCUMENT"
                                 };
 
                 requestPermissions(perms, REQUEST_PERMISSIONS);
@@ -296,8 +284,7 @@ default: break;
             results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.WRITE_EXTERNAL_STORAGE")));
             results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.MANAGE_EXTERNAL_STORAGE")));
             results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS")));
-            results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.ACTION_OPEN_DOCUMENT" )));
-            results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.MANAGE_MEDIA" )));
+            results.add(String.valueOf(ContextCompat.checkSelfPermission(getContext(), "android.permission.VIBRATE")));
 
 
             results.add(String.valueOf(Environment.isExternalStorageManager()));
@@ -317,20 +304,18 @@ String strPermissions = "";
                 Log.d("TAG", strPermissions);
 
 
-/*
-todo: make this toast when permissions are all figured out
 
-            if(results.get(0) == 0)
+            if(Environment.isExternalStorageManager())
             {
-                Toast.makeText(getContext(), "permission accepted", Toast.LENGTH_SHORT).show();
-                Log.d("", "permission accepted ");
+                Toast.makeText(getContext(), "accepted storage permission!", Toast.LENGTH_SHORT).show();
+                Log.d("permission", "storage permission accepted ");
             }
-            else if(results.get(0) == -1)
+            else
             {
-                Toast.makeText(getContext(), "permission denied", Toast.LENGTH_SHORT).show();
-                Log.d("", "permission denied ");
+                Toast.makeText(getContext(), "declined storage permission!", Toast.LENGTH_SHORT).show();
+                Log.d("permission", "storage permission denied ");
             }
-*/
+
 
             break;
 
