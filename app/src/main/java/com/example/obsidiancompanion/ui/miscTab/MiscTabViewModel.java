@@ -4,5 +4,5 @@ import androidx.lifecycle.ViewModel;
 
 public class MiscTabViewModel extends ViewModel
 {
-    // TODO: Implement the ViewModel
+
 }
