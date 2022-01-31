@@ -1,9 +1,11 @@
 package com.example.obsidiancompanion.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,42 +20,17 @@ import com.example.obsidiancompanion.R;
 import com.example.obsidiancompanion.classes.Processor;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-
-
 public class SettingsGeneralFragment extends PreferenceFragmentCompat
 {
 
     final int RESULT_REQUEST_PERMISSIONS = 19;
     final int RESULT_REQUEST_ALL_FILE_PERMISSION = 18;
+    final int RESULT_SET_VAULT_FOLDER = 20;
 
-
-
-
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-
-        super.onCreate(savedInstanceState);
-
-        Log.d("TAG", "General frag load - checking init all prefs...");
-
-        Processor.initPrefs(getContext());
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
-    @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
+    private void updateDyanamicPrefs()
     {
-        setPreferencesFromResource(R.xml.preferences_general, rootKey);
-
-
         //get the saved permissions to write permission statuses to the permission button:
         boolean[] basicPermissions = Processor.checkBasicPermissions(getContext());
         boolean allFilesManagePerm = basicPermissions[0];
@@ -65,21 +42,53 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
 
 
 
-        //
-        //request permissions
+        findPreference("prefSetVaultFolder").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+
+                //dont think we need content permissions, just choosing the path
+                chooseFile.putExtra(DocumentsContract.EXTRA_PROMPT, "Allow Write Permission");
+
+                //to set starting dir - intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uriToLoad);
+
+                //is this even how to do this for a folder?
+                //chooseFile.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
+                startActivityForResult(chooseFile, RESULT_SET_VAULT_FOLDER);
+
+                return true;
+            }
+        });
+
+
+
+        findPreference("prefGitHubButton").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        {
+            @Override
+            public boolean onPreferenceClick(Preference preference)
+            {
+                Intent githubIntent = new Intent(Intent.ACTION_VIEW);
+                githubIntent.setData(Uri.parse("https://github.com/cheeseonamonkey/ObsidianCompanion"));
+                startActivity(githubIntent);
+
+                return true;
+            }
+        });
+
         findPreference("prefRequestPermissions").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
             @Override
             public boolean onPreferenceClick(Preference preference)
             {
 
-                setPreferencesFromResource(R.xml.preferences_general, rootKey);
-
                 boolean[] basicPermissions = Processor.checkBasicPermissions(getContext());
                 boolean allFilesManagePerm = basicPermissions[0];
                 boolean fileWritePerm = basicPermissions[1];
 
-                if( ! allFilesManagePerm) //all files manager permission NOT granted
+                if (!allFilesManagePerm) //all files manager permission NOT granted
                 {
 
                     Intent filePermissionIntent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
@@ -87,7 +96,7 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
 
                     Toast.makeText(getContext(), "File manage permission already granted!", Toast.LENGTH_SHORT).show();
 
-                }else //file write permission is NOT granted
+                } else //file write permission is NOT granted
                 {
 
                     //request these permissions either way
@@ -106,17 +115,51 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
 
                 //other permissions requested after the result
 
-
-
                 return true;
             }
         });
 
+    }
 
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+
+        super.onCreate(savedInstanceState);
+
+        Log.d("initPrefs", "General tab frag load - checking initPrefs for all pref defaults");
+
+        Processor.initPrefs(getContext());
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey)
+    {
+        setPreferencesFromResource(R.xml.preferences_general, rootKey);
+
+
+        updateDyanamicPrefs();
 
 
 
         //
+        //request permissions
+
+        /*  ____________________  */
+        /*  permission listener:  */
+        //listener is set in the updatePermissionButton() method now
+        //result of it displaying data and remaining clickable
+        //findPreference("prefRequestPermissions").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
+        //
+
+
+
+
+        /*
         //debug test storage
         findPreference("prefTestStorage").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
@@ -132,23 +175,17 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
                 log("exists-" + String.valueOf(dir.exists()));
                 log("parents parent-" + String.valueOf(dir.getParentFile().getParentFile()));
 
-
-
                 for(String s : dir.list())
                 {
                     log("\nlst- " + s.toString());
                 }
 
-
-
-
-
-
-
                 return true;
             }
         });
+        */
 
+        /*
         findPreference("prefTestFile").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener()
         {
             @Override
@@ -176,7 +213,7 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
 
                     Toast.makeText(getContext(), "wrote some nonsense to test file", Toast.LENGTH_SHORT).show();
 
-                    */
+
 
                 } catch (Exception exc)
                 {
@@ -187,8 +224,8 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
                 return true;
             }
         });
+        /*
 
-    }
 
 
 
@@ -199,9 +236,17 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
 
 
 
-    /*
-    activity result
-     */
+        */
+
+    }//end on create prefs
+
+
+
+
+
+
+        /*                     */
+        /*  Activity results:  */
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
@@ -213,10 +258,6 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
 
         switch(requestCode)
         {
-
-
-
-
 
 
             //
@@ -251,25 +292,44 @@ public class SettingsGeneralFragment extends PreferenceFragmentCompat
                 requestPermissions(perms, RESULT_REQUEST_PERMISSIONS);
 
 
+                updateDyanamicPrefs();
 
                 break;
-                //end all file permission
+                //end all file permission result
 
 
 
 
+            /*  ---------------------------------  */
+            /*  Activity result: Set vault folder  */
+            case RESULT_SET_VAULT_FOLDER:
+
+                if(data != null)
+                {
+                    Uri contentUri = data.getData();
+
+                    //extract real path from uri:
+                    String dirPath = contentUri.getPath();
+                    String strPath = "/" + dirPath.split(":")[1];
+
+                    //Log.d("TAG", "path - " + strPath);
+                    //Log.d("TAG", "name - " + strVaultName);
+
+                    Processor.setVaultFolderPath(getContext(), strPath);
+
+                    Log.d("a", "Vault Folder set");
+                    Toast.makeText(getContext(), "Vault folder set", Toast.LENGTH_SHORT).show();
+                }
+                break;
+                //end vault folder result
+
+
+    default: break;
 
 
 
 
-
-
-
-default: break;
-
-
-
-        }//ends switch of activityResult requestCode
+        }//ends switch of result code
 
 
 
@@ -305,7 +365,7 @@ default: break;
         {
             case RESULT_REQUEST_PERMISSIONS:
 
-            log("ActivityResult - general permissions");
+                Log.d("tag", "ActivityResult - general permissions");
 
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -326,13 +386,7 @@ default: break;
                 }
 
 
-
-
-
-
-
-
-
+                updateDyanamicPrefs();
 
 
             break;

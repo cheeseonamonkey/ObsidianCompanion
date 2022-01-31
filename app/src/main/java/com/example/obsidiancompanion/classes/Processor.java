@@ -8,22 +8,32 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +43,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class Processor
 {
@@ -43,15 +55,19 @@ public class Processor
     public final static int DEFAULT_PREF_WRITE_MODE = 21;
     public final static int LOCAL_PREF_WRITE_MODE = 22;
 
-    //preference (persistent storage) keys:
+    //preference keys:
+    //default prefs are readable by all running android apps and services
     public static final String APPEND_PREF_KEY = "obscom_ppAppend";
     public static final String PREPEND_PREF_KEY = "obscom_ppPrepend";
     public static final String FILE_URI_PREF_KEY = "obscom_QuickAddFileUri";
     public static final String FIRST_RUN_PREF_KEY = "obscom_QuickAddFileUri";
     public static final String FILE_NAME_PREF_KEY = "obscom_QuickAddFileName";
     public static final String FILE_PATH_PREF_KEY = "obscom_QuickAddFilePath";
-
+    public static final String DEFAULT_TAB_PREF_KEY = "obscom_DefaultTab";
+    
     public static final String VAULT_FOLDER_PATH_PREF_KEY = "obscom_VaultFolderPath";
+    public static final String VAULT_NAME_PREF_KEY = "obscom_VaultName";
+    public static final String VAULT_SIZE_PREF_KEY = "obscom_VaultSize";
 
     public boolean firstRun = false;
 
@@ -300,9 +316,193 @@ public class Processor
 
     }
 
-    //end nested classes
-    //===============================
+    public static class Zipper
+    {
 
+        // zip a directory, including sub files and sub directories
+        public static boolean zipFolder(Path source) throws IOException
+        {
+
+            // get folder name as zip file name
+            String zipFileName = source.getFileName().toString() + ".zip";
+
+            try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFileName)))
+            {
+
+                Files.walkFileTree(source, new SimpleFileVisitor<Path>()
+                {
+                    @Override
+                    public FileVisitResult visitFile(Path file,
+                                                     BasicFileAttributes attributes)
+                    {
+
+                        // only copy files, no symbolic links
+                        if (attributes.isSymbolicLink())
+                        {
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        try (FileInputStream fis = new FileInputStream(file.toFile()))
+                        {
+
+                            Path targetFile = source.relativize(file);
+                            zos.putNextEntry(new ZipEntry(targetFile.toString()));
+
+                            byte[] buffer = new byte[1024];
+                            int len;
+                            while ((len = fis.read(buffer)) > 0)
+                            {
+                                zos.write(buffer, 0, len);
+                            }
+
+                            // if large file, throws out of memory
+                            //byte[] bytes = Files.readAllBytes(file);
+                            //zos.write(bytes, 0, bytes.length);
+
+                            zos.closeEntry();
+
+                            System.out.printf("Zip file : %s%n", file);
+
+                        } catch (IOException e)
+                        {
+                            Log.d("TAG", "zipper error - " + e.getMessage().toString());
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult visitFileFailed(Path file, IOException exc) {
+                        System.err.printf("Unable to zip : %s%n%s%n", file, exc);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+
+            }
+
+            return true;
+        }
+    }
+
+
+    public static void setVaultFolderPath(Context context, String strPath)
+    {
+        String strVaultNamesTemp[] = strPath.split("/");
+        String strVaultName = strVaultNamesTemp[strVaultNamesTemp.length - 1];
+
+
+
+        //todo: file size
+
+        PrefWriter.writePref(context, VAULT_FOLDER_PATH_PREF_KEY, strPath);
+        PrefWriter.writePref(context, VAULT_NAME_PREF_KEY, strVaultName);
+        //VAULT_SIZE_PREF_KEY
+
+    }
+
+
+
+    public static void setDefaultTab(Context context, int defaultTabValue)
+    {
+
+
+        PrefWriter.writePref(context, DEFAULT_TAB_PREF_KEY, String.valueOf(defaultTabValue));
+    }
+
+    public static boolean initPrefs(Context context)
+    {
+        //if prefs aren't yet set, sets the defaults
+        Map<String, Boolean> prefsSet = new Hashtable<>();
+
+        prefsSet.put("APPEND_PREF_KEY", PrefWriter.isPrefSet(context, APPEND_PREF_KEY));
+        prefsSet.put("PREPEND_PREF_KEY", PrefWriter.isPrefSet(context, PREPEND_PREF_KEY));
+        prefsSet.put("FILE_URI_PREF_KEY", PrefWriter.isPrefSet(context, FILE_URI_PREF_KEY));
+        prefsSet.put("FILE_PATH_PREF_KEY", PrefWriter.isPrefSet(context, FILE_PATH_PREF_KEY));
+        prefsSet.put("FILE_NAME_PREF_KEY", PrefWriter.isPrefSet(context, FILE_NAME_PREF_KEY));
+        prefsSet.put("DEFAULT_TAB_PREF_KEY", PrefWriter.isPrefSet(context, DEFAULT_TAB_PREF_KEY));
+        prefsSet.put("VAULT_FOLDER_PATH_PREF_KEY", PrefWriter.isPrefSet(context, VAULT_FOLDER_PATH_PREF_KEY));
+        prefsSet.put("VAULT_NAME_PREF_KEY", PrefWriter.isPrefSet(context, VAULT_NAME_PREF_KEY));
+
+
+
+
+
+        for(String key : prefsSet.keySet())
+        {
+
+            //if a pref isn't set
+            if(prefsSet.get(key) != null && prefsSet.get(key) == false)
+            {
+
+
+                switch (key)
+                {
+
+                    case "APPEND_PREF_KEY":
+                        Log.d("initPref", String.valueOf(APPEND_PREF_KEY) + " pref not set - setting default: " + "\\n\\n\\n---\\n\\n");
+                        Processor.PrefWriter.writePref(context, "\\n\\n\\n---\\n\\n" , APPEND_PREF_KEY);
+                        break;
+
+                    case "PREPEND_PREF_KEY":
+                        Log.d("initPref", String.valueOf(PREPEND_PREF_KEY) + " pref not set - setting default: " + "\\n[!date] [!time]\\n\\n");
+                        Processor.PrefWriter.writePref(context, "\\n[!date] [!time]\\n\\n", PREPEND_PREF_KEY);
+                        break;
+
+
+
+/*
+            I think higher-level error handling is already doing all this, with user notification
+
+                case "FILE_URI_PREF_KEY":
+                    Log.d("initPref", String.valueOf(FILE_URI_PREF_KEY) + " pref not set - setting default: " + "" );
+                    setPostProcessingStr(context, "" , APPEND_PREF_CHOOSER);
+                    break;
+
+
+                case "FILE_PATH_PREF_KEY":
+                    Log.d("initPref", String.valueOf(FILE_PATH_PREF_KEY) + " pref not set - setting default: " + "\\n[!date] [!time]\\n\\n" );
+                    setPostProcessingStr(context, "" , APPEND_PREF_CHOOSER);
+                    break;
+*/
+
+                    case "FILE_NAME_PREF_KEY":
+                        Log.d("initPref", String.valueOf(FILE_NAME_PREF_KEY) + " pref not set - setting default: " + "FILE NOT SET");
+                        Processor.PrefWriter.writePref(context, Processor.FILE_NAME_PREF_KEY, "FILE NOT SET");
+                        break;
+
+                    case "DEFAULT_TAB_PREF_KEY":
+                        Log.d("initPref", String.valueOf(DEFAULT_TAB_PREF_KEY) + " pref not set - setting default: " + "0");
+                        Processor.PrefWriter.writePref(context, Processor.DEFAULT_TAB_PREF_KEY, "0");
+                        break;
+
+                    case "VAULT_FOLDER_PATH_PREF_KEY":
+                        Log.d("initPref", String.valueOf(VAULT_FOLDER_PATH_PREF_KEY) + " pref not set - setting default: " + "\\");
+                        Processor.PrefWriter.writePref(context, Processor.VAULT_FOLDER_PATH_PREF_KEY, "/");
+                        break;
+
+                    case "VAULT_NAME_PREF_KEY":
+                        Log.d("initPref", String.valueOf(VAULT_NAME_PREF_KEY) + " pref not set - setting default: " + "\\");
+                        Processor.PrefWriter.writePref(context, Processor.VAULT_NAME_PREF_KEY, "VAULT NOT SET");
+                        break;
+
+
+                    default:
+                        break;
+                }//end switch
+
+
+            }else if (prefsSet.get(key) != null)   //the pref is already set
+            {
+                Log.d("initPrefs", "initPref - no default, pref already set");
+
+                //wacky xml error does not like this
+                //prefsSet.remove(key);
+
+            }
+        }
+
+
+        return true;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     public static boolean[] checkBasicPermissions(Context context)
@@ -428,50 +628,6 @@ public class Processor
 
 
 
-    public static boolean initPrefs(Context context)
-    {
-        //if prefs aren't yet set, sets the defaults
-
-        boolean isSet_APPEND_PREF_KEY = PrefWriter.isPrefSet(context, APPEND_PREF_KEY);
-        boolean isSet_PREPEND_PREF_KEY = PrefWriter.isPrefSet(context, PREPEND_PREF_KEY);
-        boolean isSet_FILE_URI_PREF_KEY = PrefWriter.isPrefSet(context, FILE_URI_PREF_KEY);
-        boolean isSet_FILE_NAME_PREF_KEY = PrefWriter.isPrefSet(context, FILE_NAME_PREF_KEY);
-
-        if( ! isSet_APPEND_PREF_KEY)
-        {
-            Log.d("TAG", String.valueOf(APPEND_PREF_KEY) + " pref not saved - setting default.");
-
-            setPostProcessingStr(context, "\\n\\n\\n---\\n\\n" , APPEND_PREF_CHOOSER);
-
-        }
-        if( ! isSet_PREPEND_PREF_KEY)
-        {
-            Log.d("TAG", String.valueOf(PREPEND_PREF_KEY) + " pref not saved - setting default values!");
-
-            setPostProcessingStr(context, "\\n[!date] [!time]\\n\\n", PREPEND_PREF_CHOOSER);
-        }
-        if( ! isSet_FILE_URI_PREF_KEY)
-        {
-            //don't set a default
-            Log.d("TAG", String.valueOf(FILE_URI_PREF_KEY) + " pref not saved - user must choose the file!");
-
-
-        }
-        if( ! isSet_FILE_NAME_PREF_KEY )
-        {
-            Log.d("TAG", String.valueOf(FILE_URI_PREF_KEY) + " pref not saved - setting default filename");
-            Processor.PrefWriter.writePref(context, FILE_NAME_PREF_KEY, "NOTSET:" + FILE_NAME_PREF_KEY, DEFAULT_PREF_WRITE_MODE);
-        }
-
-
-
-        String APPEND_PR = PrefWriter.readPref(context, APPEND_PREF_KEY);
-        String PREPEND_P = PrefWriter.readPref(context, PREPEND_PREF_KEY);
-        String FILE_URI_ = PrefWriter.readPref(context, FILE_URI_PREF_KEY);
-        String FIRST_RUN = PrefWriter.readPref(context, FIRST_RUN_PREF_KEY);
-
-        return true;
-    }
 
     public static void vibrateSmol(Context context)
     {

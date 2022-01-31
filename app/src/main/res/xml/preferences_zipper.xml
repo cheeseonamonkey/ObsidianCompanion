@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <PreferenceCategory
+        android:key="prefZippingCategory"
+        android:summary="Vault: "
+        app:icon="@drawable/icon_file_zip_light"
+        app:title="Zipping">
+
+        <Preference
+            android:key="prefCompressTest"
+            android:title="debug - test compression" />
+
+        <Preference
+            android:key="prefCompressVaultButton"
+            android:summary="Compress vault in file system"
+            android:title="Compress vault" />
+
+        <Preference
+            android:key="prefSendVaultButton"
+            android:summary="Compress vault and send it"
+            android:title="Send vault"
+            app:icon="@drawable/icon_share_light" />
+
+
+        <!--  Disabled  -->
+        <EditTextPreference
+            android:enabled="false"
+            android:title="Encryption password (optional)" />
+
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:summary="Vault:\nSize:"
+        app:icon="@drawable/icon_folder_light"
+        app:title="Extracting" >
+
+
+        <Preference
+            android:key="prefExtractVaultButton"
+            android:summary="Extract and set up vault on this device from a compressed file"
+            android:title="Extract vault to device" />
+
+        <!--
+        <Preference
+            android:key="prefExtractToPcButton"
+            android:summary="Extract your vault to your PC vault"
+            android:title="Extract vault to PC" />
+
+        <EditTextPreference
+            android:key="prefExtractToPcSettings"
+            android:singleLine="true"
+            android:title="Extract to PC settings" />
+        -->
+
+    </PreferenceCategory>
+
+
+    <!-- disabled -->
+    <CheckBoxPreference
+        android:key="prefDefaultTabZipper"
+        app:title="Default tab"
+        android:summary="Make this Zipper tab open by default when opening Obsidian Companion."
+        android:defaultValue="false"
+        app:allowDividerAbove="true"
+        android:enabled="false" />
+
+</PreferenceScreen>

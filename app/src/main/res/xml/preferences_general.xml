@@ -1,67 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-<!--
-    <Preference
-        android:key="pref_static_field_key"
-        android:selectable="false"
-        android:persistent="false"
-        android:summary="(long-press an option for help)"/>
--->
+    <!--
+        <Preference
+            android:key="pref_static_field_key"
+            android:selectable="false"
+            android:persistent="false"
+            android:summary="(long-press an option for help)"/>
+    -->
 
     <Preference
         android:key="prefRequestPermissions"
         android:title="Request permissions"
-        android:summary="Permissions required for QuickAdd"/>
+        android:summary="Permissions required for QuickAdd\nCurrent permissions:\n - Manage all files: \n - Write files: "/>
+
+
+    <Preference
+        android:key="prefSetVaultFolder"
+        android:summary="Select Obsidian vault folder"
+        android:title="Set vault folder" />
+
+    <!-- _______hr is drawn here_______ -->
 
 
 
-    <PreferenceCategory android:title="Debug">
-
-
-
-        <Preference
-            android:key="prefTestStorage"
-            android:title="Test storage" />
-
-        <Preference
-            android:key="prefTestFile"
-            android:title="Test file" />
-
-
-
-        <!--
-                <Preference
-                    android:key="prefDebugLogAllSavedPrefs"
-                    android:title="Log all saved prefs"/>
-
-
--->
-
-                <Preference
-                    android:key="prefDebugLogAllPermissions"
-                    android:title="Log every permission status"/>
-
-
-
-
-
-    </PreferenceCategory>
-
+    <Preference
+        android:key="prefGitHubButton"
+        android:title="Github"
+        app:allowDividerAbove="true"/>
 
 
     <PreferenceCategory android:title="Misc">
 
 
-
-
         <!-- disabled -->
-        <Preference
-            android:key="prefSetVaultFolder"
-            android:title="Set vault folder"
-            android:summary="Select the first/default folder you will open to when selecting a file. "
-            android:enabled="false"/>
+        <!--
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref"
+            android:title=""
+            android:summary=""
+            android:enabled=""
 
+            />
+        -->
 
         <!-- disabled -->
         <SwitchPreference
@@ -81,17 +63,43 @@
             android:title="Use am/pm time format"
             android:summary="Use 12-hour time format \n - ON for am/pm (10:30 pm)\n - OFF for 24-hour (20:30)"
             android:enabled="false"
-/>
-
-
+            />
 
 
     </PreferenceCategory>
 
 
+    <!--
+<PreferenceCategory android:title="Debug">
+
+            <Preference
+                android:key="prefTestStorage"
+                android:title="Test storage" />
+
+            <Preference
+                android:key="prefTestFile"
+                android:title="Test file" />
+
+            <Preference
+                android:key="prefDebugLogAllSavedPrefs"
+                android:title="Log all saved prefs"/>
+
+            <Preference
+                android:key="prefDebugLogAllPermissions"
+                android:title="Log every permission status"/>
+
+    </PreferenceCategory>
+        -->
 
 
-
+    <!-- disabled -->
+    <CheckBoxPreference
+        android:key="prefDefaultTabGeneral"
+        app:title="Default tab"
+        android:summary="Make this home tab open by default when opening Obsidian Companion."
+        android:defaultValue="true"
+        app:allowDividerAbove="true"
+        android:enabled="false" />
 
 
 </PreferenceScreen>

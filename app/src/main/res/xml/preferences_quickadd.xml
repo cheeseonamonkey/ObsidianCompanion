@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 
 
     <PreferenceCategory android:title="QuickAdd"
-        android:icon="@drawable/quickaddicon_light"
-        >
-
-
-
+        android:icon="@drawable/quickaddicon_light">
 
 
 
@@ -18,37 +15,18 @@
             android:title="Set default QuickAdd file"
             android:summary="Select default file in vault to target QuickAdd to."/>
 
-
         <Preference
-            android:key="prefQaDocsButton"
-            android:title="QuickAdd Docs" />
+            android:key="prefSetQuickAddFolder"
+            android:title="Set QuickAdd folder"
+            android:summary="Select the folder new files will be created in when QuickAdding. "
+            android:enabled="false"/>
 
 
 
-
-        <!-- //not discreet mode by obsidian:// uri
-                <SwitchPreference
-                    android:defaultValue="true"
-                    android:key="discreetMode"
-                    android:summary="Discreet appending will not require Obsidian to open in the foreground before writing to a file"
-                    android:title="Use discreet file appending"
-
-                    app:enabled="false"
-                    />
-
-
-                    <EditTextPreference
-                        android:defaultValue="Default value"
-                        android:enabled="false"
-                        android:selectAllOnFocus="true"
-                        android:singleLine="true"
-                        android:title="Add file name (not discreet)"
-                        app:enabled="false" />
-
-
-        -->
 
     </PreferenceCategory>
+
+
 
     <PreferenceCategory android:title="QuickAdd post-processing:">
 
@@ -67,10 +45,24 @@
             android:title="Append"
             android:summary="Added after the data"
             android:defaultValue="\\n\\n\\n---\\n\\n"
-            android:dialogMessage="Markdown text appended immediately after the sent data. Use \\n for a new line.  \n\nDefault: \\n\\n\\n---  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
+            android:dialogMessage="Markdown text appended immediately after the sent data. Use \\n for a new line.  \n\nDefault: \\n\\n\\n---\\n\\n  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
 
     </PreferenceCategory>
 
 
+
+    <Preference
+        android:key="prefQaDocsButton"
+        android:title="QuickAdd Docs" />
+
+
+    <!-- disabled -->
+    <CheckBoxPreference
+        android:key="prefDefaultTabQuickAdd"
+        app:title="Default tab"
+        android:summary="Make this QuickAdd tab open by default when opening Obsidian Companion."
+        android:defaultValue="false"
+        app:allowDividerAbove="true"
+        android:enabled="false" />
 
 </PreferenceScreen>

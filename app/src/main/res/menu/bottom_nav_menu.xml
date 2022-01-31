@@ -11,4 +11,10 @@
         android:icon="@drawable/quickaddicon"
         android:title="QuickAdd" />
 
+
+    <item
+        android:id="@+id/navigation_zipper"
+        android:icon="@drawable/icon_file_zip"
+        android:title="Zipper" />
+
 </menu>

@@ -12,7 +12,10 @@
     <fragment
         android:id="@+id/navigation_quickadd"
         android:name="com.example.obsidiancompanion.SettingsQuickAddFragment"
-        android:label="fragment_quick_add"
-        tools:layout="@layout/fragment_quick_add" />
+        android:label="QuickAdd" />
+    <fragment
+        android:id="@+id/navigation_zipper"
+        android:name="com.example.obsidiancompanion.ui.ZipperFragment"
+        android:label="Zipper" />
 
 </navigation>

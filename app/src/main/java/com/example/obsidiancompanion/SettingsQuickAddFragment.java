@@ -70,7 +70,7 @@ public class SettingsQuickAddFragment extends PreferenceFragmentCompat
         super.onCreate(savedInstanceState);
 
 
-        Log.d("TAG", "QuickAdd frag load - checking init all prefs...");
+        Log.d("initPrefs", "QuickAdd tab frag load - checking initPrefs for all pref defaults");
 
         Processor.initPrefs(getContext());
 
@@ -151,6 +151,8 @@ public class SettingsQuickAddFragment extends PreferenceFragmentCompat
     }
 
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -191,56 +193,53 @@ switch(requestCode)
         //file pick
 
 
-
-        //URI:
-        Uri contentUri = data.getData();
-
-
-
+        if(data != null)
+        {
+            //URI:
+            Uri contentUri = data.getData();
 
 
-        //persistent uri access:
-        final int takeFlags = data.getFlags();
+            //persistent uri access:
+            final int takeFlags = data.getFlags();
 
-        getContext().getContentResolver().takePersistableUriPermission(contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        Log.d("TAG", "(persistable) flags: " + takeFlags);
-
-
-        //extract data from uri:
-        String[] strDirs = contentUri.getPath().split("/");
-        String srcFileName = strDirs[strDirs.length - 1];
-        srcFileName = srcFileName.replace(".md", "");
-
-        //extract real path from uri:
-        final String docId = DocumentsContract.getDocumentId(contentUri);
-        final String[] split = docId.split(":");
-        final String type = split[0];
-
-        //path string:
-        String pathA = System.getenv("EXTERNAL_STORAGE") + "/" + split[1];
-        String pathB = Environment.getExternalStorageDirectory() + "/" + split[1];
-
-        //set real path
-        String scrFilePath = pathA;
-        //String scrFilePath = pathB;
+            getContext().getContentResolver().takePersistableUriPermission(contentUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            //Log.d("TAG", "(persistable) flags: " + takeFlags);
 
 
-        log("picked file:\n_________________\n" +
-                "content uri - " + contentUri.toString() + "\n" + "filename - " + srcFileName + "\n" + "" +
-                "filePath - " + scrFilePath + "\n" +
-                "doc id - " + docId + "\n" +
-                "path a - " + pathA + "\n" +
-                "path b - " + pathB + "\n" +
-                "_________________");
+            //extract data from uri:
+            String[] strDirs = contentUri.getPath().split("/");
+            String srcFileName = strDirs[strDirs.length - 1];
+            srcFileName = srcFileName.replace(".md", "");
+
+            //extract real path from uri:
+            final String docId = DocumentsContract.getDocumentId(contentUri);
+            final String[] split = docId.split(":");
+            final String type = split[0];
+
+            //path string:
+            String pathA = System.getenv("EXTERNAL_STORAGE") + "/" + split[1];
+            String pathB = Environment.getExternalStorageDirectory() + "/" + split[1];
+
+            //set real path
+            String scrFilePath = pathA;
+            //String scrFilePath = pathB;
 
 
+            log("picked file:\n_________________\n" +
+                    "content uri - " + contentUri.toString() + "\n" + "filename - " + srcFileName + "\n" + "" +
+                    "filePath - " + scrFilePath + "\n" +
+                    "doc id - " + docId + "\n" +
+                    "path a - " + pathA + "\n" +
+                    "path b - " + pathB + "\n" +
+                    "_________________");
 
-        //save to prefs
-        Processor.setQuickAddFileLocation(getContext(), contentUri.toString(), srcFileName, scrFilePath);
+
+            //save to prefs
+            Processor.setQuickAddFileLocation(getContext(), contentUri.toString(), srcFileName, scrFilePath);
 
 
-        Toast.makeText(getContext(), "File set!", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getContext(), "File set!", Toast.LENGTH_SHORT).show();
+        }
         break;
     //end choose QuickAdd file
 
