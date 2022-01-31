@@ -1,20 +1,38 @@
 package com.example.obsidiancompanion.classes;
 
+
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class Processor
 {
@@ -31,11 +49,16 @@ public class Processor
     public static final String FILE_URI_PREF_KEY = "obscom_QuickAddFileUri";
     public static final String FIRST_RUN_PREF_KEY = "obscom_QuickAddFileUri";
     public static final String FILE_NAME_PREF_KEY = "obscom_QuickAddFileName";
+    public static final String FILE_PATH_PREF_KEY = "obscom_QuickAddFilePath";
+
+    public static final String VAULT_FOLDER_PATH_PREF_KEY = "obscom_VaultFolderPath";
 
     public boolean firstRun = false;
 
 
 
+    //===============================
+    //nested classes
     public static class PrefWriter
     {
         //read method is public, write method is private
@@ -104,6 +127,10 @@ public class Processor
 
         }
 
+        private static void writePref(Context context, String prefKey, String prefData)
+        {
+            writePref(context, prefKey, prefData, DEFAULT_PREF_WRITE_MODE);
+        }
         private static void writePref(Context context, String prefKey, String prefData, Integer PREF_WRITE_MODE )
         {
             try
@@ -169,6 +196,195 @@ public class Processor
 
     }
 
+    public static class QuickAdder
+    {
+        public static boolean quickAdd(Context context, String strData)
+        {
+            try
+            {
+
+                Log.d("quickadd", "QuickAdding now!\ncontent:\n" + strData);
+
+                //if path set
+                if( ! Processor.PrefWriter.isPrefSet(context, Processor.FILE_PATH_PREF_KEY))
+                {
+                    Toast.makeText(context, "Error - file not yet chosen!", Toast.LENGTH_SHORT).show();
+                    throw new Exception("File not yet chosen.");
+                }
+
+                //load path from prefs
+                String filePath = Processor.PrefWriter.readPref(context, Processor.FILE_PATH_PREF_KEY);
+                Log.d("quickadd", "QuickAdd target path: " + filePath);
+
+                //get data string ready:
+                String strWrite = strData;
+
+                if(strWrite == "")
+                {
+                    Toast.makeText(context, "Error - Content empty!", Toast.LENGTH_SHORT).show();
+                    throw new Exception("Error 701 - Content box was empty!");
+                }
+                else
+                {
+
+                    //post-process data string
+                    strWrite = Processor.process(strWrite, context);
+
+                    //attempt quickadd:
+                    Log.d("quickadd", "Attempting QuickAdd now\ndata to write:\n" + strWrite + "\nfile path:\n" + filePath);
+
+                    if
+                        //write to file
+                    (appendToFile(context,filePath, strWrite))
+                    {
+                        //write success
+                        Log.d("quickadd", "QuickAdd success!");
+
+                    }else
+                    {
+                        //write fail
+                        Log.d("quickadd", "quickadd failed - file write was not completed.");
+                    }
+
+                    //user success notification
+                    Toast.makeText(context, "QuickAdded", Toast.LENGTH_SHORT).show();
+                    Processor.vibrateSmol(context);
+
+                    return true;
+
+                }
+                //end if data string empty
+
+
+
+
+            }catch(Exception exc)
+            {
+                Log.d("error", "ERROR 421 in input dialog - " + exc.getMessage());
+                return false;
+            }
+        }
+
+
+        private static boolean appendToFile(Context context, String filePath, String strWrite)
+        {
+            Log.d("io", "Writing to file: " + filePath + "\ncontent:\n" + strWrite);
+
+            try
+            {
+                //file from path
+                File file = new File(filePath);
+
+                FileOutputStream outputStream = new FileOutputStream(file, true);
+
+                //file writer
+                OutputStreamWriter streamWriter = new OutputStreamWriter(outputStream);
+
+                streamWriter.write(strWrite);
+
+                streamWriter.flush();
+                streamWriter.close();
+
+                //return true for write success
+                return true;
+
+
+            }catch(Exception exc)
+            {
+                Log.d("TAG", "Error 141 writing to file - " + exc.getMessage());
+                return false;
+            }
+
+
+        }
+
+    }
+
+    //end nested classes
+    //===============================
+
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    public static boolean[] checkBasicPermissions(Context context)
+    {
+        /*
+        return format:
+         { fileManage, write }
+        */
+
+        boolean fileManage = Environment.isExternalStorageManager();
+        boolean write;
+        
+        
+        int intWrite = ContextCompat.checkSelfPermission(context, "android.permission.WRITE_EXTERNAL_STORAGE");
+        if(intWrite == 0) //permission accepted
+            write = true;
+        else //permission not accepted
+            write = false;
+
+        Log.d("permission", "Permissions: \n" + "manage Environment files: " + fileManage + "\nwrite file: " + write);
+
+        return new boolean[] { fileManage, write };
+
+    }
+    
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    public static Map<String, String> logAllPermissions(Context context)
+    {
+        boolean booFileManage = Environment.isExternalStorageManager();
+        String fileManage;
+        
+        if(booFileManage) //permission accepted
+            fileManage = "true";
+        else
+            fileManage = "false";
+            
+        boolean write;
+        
+        Map<String, String> perms = new Hashtable<>();
+
+
+        perms.put(
+                "external file manager\t",
+        fileManage
+        );
+
+        perms.put(
+                "android.permission.WRITE_EXTERNAL_STORAGE",
+                String.valueOf(ContextCompat.checkSelfPermission(context, "android.permission.WRITE_EXTERNAL_STORAGE" )));
+        perms.put(
+                "android.permission.MANAGE_EXTERNAL_STORAGE",
+                String.valueOf(ContextCompat.checkSelfPermission(context, "android.permission.MANAGE_EXTERNAL_STORAGE" )));
+        perms.put(
+                "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS",
+                String.valueOf(ContextCompat.checkSelfPermission(context, "android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" )));
+        perms.put(
+                "android.permission.VIBRATE",
+                String.valueOf(ContextCompat.checkSelfPermission(context, "android.permission.VIBRATE" )));
+        perms.put(
+                "android.permission.READ_USER_DICTIONARY",
+                String.valueOf(ContextCompat.checkSelfPermission(context, "android.permission.READ_USER_DICTIONARY" )));
+        perms.put(
+                "android.permission.WRITE_USER_DICTIONARY",
+                String.valueOf(ContextCompat.checkSelfPermission(context, "android.permission.WRITE_USER_DICTIONARY" )));
+
+       String pstr = "\n\nPermissions:\n___________\n";
+
+
+
+        for(String key : perms.keySet())
+        {
+            pstr += key + "\t-\t-\t-  " + perms.get(key) + "\n";
+        }
+
+        pstr += "\n___________\n";
+
+        Log.d("permission", pstr);
+
+        return perms;
+
+        
+    }
 
 
     public static String getClipBoard(Context context)
@@ -225,7 +441,7 @@ public class Processor
         {
             Log.d("TAG", String.valueOf(APPEND_PREF_KEY) + " pref not saved - setting default.");
 
-            setPostProcessingStr(context, "\\n\\n\\n---" , APPEND_PREF_CHOOSER);
+            setPostProcessingStr(context, "\\n\\n\\n---\\n\\n" , APPEND_PREF_CHOOSER);
 
         }
         if( ! isSet_PREPEND_PREF_KEY)
@@ -279,10 +495,14 @@ public class Processor
     }
 
 
-    public static boolean setQuickAddFileLocation(Context context, String uriData, String fileName)
+    public static boolean setQuickAddFileLocation(Context context, String uriData, String fileName, String filePath)
     {
-        PrefWriter.writePref(context, FILE_URI_PREF_KEY, uriData, DEFAULT_PREF_WRITE_MODE);
-        PrefWriter.writePref(context, FILE_NAME_PREF_KEY, fileName, DEFAULT_PREF_WRITE_MODE);
+        PrefWriter.writePref(context, FILE_URI_PREF_KEY, uriData);
+        PrefWriter.writePref(context, FILE_NAME_PREF_KEY, fileName);
+
+
+
+        PrefWriter.writePref(context, FILE_PATH_PREF_KEY, filePath);
 
         return true;
     }

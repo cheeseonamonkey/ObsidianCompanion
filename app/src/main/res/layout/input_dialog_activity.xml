@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:padding="1dp"
-            android:text="QuickAdding to file:  "
+            android:text="quickaddfilename"
             android:textSize="13sp" />
 
         <EditText

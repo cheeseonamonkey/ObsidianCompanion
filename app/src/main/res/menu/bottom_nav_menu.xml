@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_general"
         android:icon="@drawable/settings_icon"
-        android:title="Settings" />
+        android:title="General" />
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/party_icon"
-        android:title="Misc" />
+        android:id="@+id/navigation_quickadd"
+        android:icon="@drawable/quickaddicon"
+        android:title="QuickAdd" />
 
 </menu>

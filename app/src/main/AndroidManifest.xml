@@ -21,12 +21,13 @@
         android:roundIcon="@xml/adaptive_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.ObsidianCompanion"
-        android:requestLegacyExternalStorage="true">
+        android:requestLegacyExternalStorage="true"> <!-- tells app to use legacy (pre API 29?) file storage access -->
 
         <activity
             android:theme="@style/Theme.AppCompat.Dialog"
             android:name=".ui.inputDialog.InputDialogActivity"
             android:exported="false"
+            android:label="QuickAdd"
             android:excludeFromRecents="true"
             />
         <activity
@@ -44,7 +45,7 @@
             android:name=".SendTileService"
             android:enabled="true"
             android:exported="true"
-            android:icon="@drawable/ic_home_black_24dp"
+            android:icon="@drawable/quickaddicon"
             android:label="Send to Obsidian"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>

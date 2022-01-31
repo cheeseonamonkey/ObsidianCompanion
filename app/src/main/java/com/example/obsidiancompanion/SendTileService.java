@@ -33,6 +33,7 @@ public class SendTileService extends TileService
     }
 
 
+
     @Override
     public void onClick()
     {
@@ -48,13 +49,14 @@ public class SendTileService extends TileService
              */
 
             //dialog for entry:
-            // - QuickAdding is accomplished in this activity
+            // - QuickAdding is accomplished in this activity !
             Intent dialogIntent = new Intent(getApplicationContext(), InputDialogActivity.class);
             dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            dialogIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 
             //start inputDialogActivity for QuickAdding
-            getBaseContext().startActivity(dialogIntent);
-
+            startActivityAndCollapse(dialogIntent);
+            //getBaseContext().startActivity(dialogIntent);
 
 
             //debug output

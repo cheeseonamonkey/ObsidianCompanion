@@ -3,17 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_general">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.obsidiancompanion.ui.SettingsFragment"
+        android:id="@+id/navigation_general"
+        android:name="com.example.obsidiancompanion.ui.SettingsGeneralFragment"
         android:label="Settings" />
-
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.obsidiancompanion.ui.miscTab.MiscTabFragment"
-        android:label="Misc"
-        tools:layout="@layout/misc_tab_fragment" />
+        android:id="@+id/navigation_quickadd"
+        android:name="com.example.obsidiancompanion.SettingsQuickAddFragment"
+        android:label="fragment_quick_add"
+        tools:layout="@layout/fragment_quick_add" />
 
 </navigation>
