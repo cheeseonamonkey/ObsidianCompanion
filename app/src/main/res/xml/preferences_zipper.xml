@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
+    <Preference
+        android:title="Coming soon..."
+        />
+
     <PreferenceCategory
         android:key="prefZippingCategory"
         android:summary="Vault: "
@@ -10,15 +14,18 @@
         app:title="Zipping">
 
         <Preference
+            android:enabled="false"
             android:key="prefCompressTest"
             android:title="debug - test compression" />
 
         <Preference
+            android:enabled="false"
             android:key="prefCompressVaultButton"
             android:summary="Compress vault in file system"
             android:title="Compress vault" />
 
         <Preference
+            android:enabled="false"
             android:key="prefSendVaultButton"
             android:summary="Compress vault and send it"
             android:title="Send vault"
@@ -35,12 +42,14 @@
 
 
     <PreferenceCategory
-        android:summary="Vault:\nSize:"
+        android:key="prefExtractingCategory"
+        android:summary="Vault:"
         app:icon="@drawable/icon_folder_light"
-        app:title="Extracting" >
+        app:title="Extracting">
 
 
         <Preference
+            android:enabled="false"
             android:key="prefExtractVaultButton"
             android:summary="Extract and set up vault on this device from a compressed file"
             android:title="Extract vault to device" />
@@ -64,7 +73,7 @@
     <CheckBoxPreference
         android:key="prefDefaultTabZipper"
         app:title="Default tab"
-        android:summary="Make this Zipper tab open by default when opening Obsidian Companion."
+        android:summary="Make this tab (Zipper) open by default when opening Obsidian Companion."
         android:defaultValue="false"
         app:allowDividerAbove="true"
         android:enabled="false" />

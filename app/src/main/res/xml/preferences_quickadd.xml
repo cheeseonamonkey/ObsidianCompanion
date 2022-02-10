@@ -3,64 +3,73 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
-
-    <PreferenceCategory android:title="QuickAdd"
-        android:icon="@drawable/quickaddicon_light">
-
+    <PreferenceCategory
+        android:icon="@drawable/quickaddicon_light"
+        android:title="QuickAdd"
+        app:summary="QuickAdd files: 0">
 
 
         <Preference
             android:key="prefSetQuickAddFile"
-            android:title="Set default QuickAdd file"
-            android:summary="Select default file in vault to target QuickAdd to."/>
+            android:summary="Select the default file in vault to target QuickAdd"
+            android:title="Set default QuickAdd file" />
 
-        <Preference
-            android:key="prefSetQuickAddFolder"
-            android:title="Set QuickAdd folder"
-            android:summary="Select the folder new files will be created in when QuickAdding. "
-            android:enabled="false"/>
+    <!--
+   <Preference
+       android:key="prefAddQuickAddFileButton"
+       android:summary="Add QuickAdd target file"
+       android:title="Add QuickAdd file" />
 
+   <DropDownPreference
+       android:key="prefRemoveQuickAddFiles"
+       android:summary="Remove current QuickAdd target files"
+       android:title="Remove QuickAdd files" />
+-->
 
-
-
-    </PreferenceCategory>
-
-
-
-    <PreferenceCategory android:title="QuickAdd post-processing:">
-
-        <EditTextPreference
-            android:key="prefQaPrepend"
-            android:icon="@drawable/prependicon_light"
-            android:title="Prepend"
-            android:summary="Added before the data"
-            android:defaultValue="\\n[!date] [!time]\\n\\n"
-            android:dialogMessage="Markdown text prepended immediately before the sent data.  Use \\n for a new line. \n\nDefault: \\n[!date] [!time] \\n\\n   \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
+   <Preference
+       android:enabled="false"
+       android:key="prefSetQuickAddFolder"
+       android:summary="Select the folder new files will be created in when QuickAdding. "
+       android:title="Set QuickAdd folder" />
 
 
-        <EditTextPreference
-            android:key="prefQaAppend"
-            android:icon="@drawable/appendicon_light"
-            android:title="Append"
-            android:summary="Added after the data"
-            android:defaultValue="\\n\\n\\n---\\n\\n"
-            android:dialogMessage="Markdown text appended immediately after the sent data. Use \\n for a new line.  \n\nDefault: \\n\\n\\n---\\n\\n  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
-
-    </PreferenceCategory>
+</PreferenceCategory>
 
 
 
-    <Preference
-        android:key="prefQaDocsButton"
-        android:title="QuickAdd Docs" />
+<PreferenceCategory android:title="QuickAdd post-processing:">
+
+   <EditTextPreference
+       android:key="prefQaPrepend"
+       android:icon="@drawable/prependicon_light"
+       android:title="Prepend"
+       android:summary="Added before the data"
+       android:defaultValue="\\n[!date] [!time]\\n\\n"
+       android:dialogMessage="Markdown text prepended immediately before the sent data.  Use \\n for a new line. \n\nDefault: \\n[!date] [!time] \\n\\n   \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
 
 
-    <!-- disabled -->
+   <EditTextPreference
+       android:key="prefQaAppend"
+       android:icon="@drawable/appendicon_light"
+       android:title="Append"
+       android:summary="Added after the data"
+       android:defaultValue="\\n\\n\\n---\\n\\n"
+       android:dialogMessage="Markdown text appended immediately after the sent data. Use \\n for a new line.  \n\nDefault: \\n\\n\\n---\\n\\n  \n\nVariables:\n - [!empty]\n - [!date]\n - [!time]"/>
+
+</PreferenceCategory>
+
+
+
+<Preference
+   android:key="prefQaDocsButton"
+   android:title="QuickAdd Docs" />
+
+
+<!-- disabled -->
     <CheckBoxPreference
         android:key="prefDefaultTabQuickAdd"
         app:title="Default tab"
-        android:summary="Make this QuickAdd tab open by default when opening Obsidian Companion."
+        android:summary="Make this tab (QuickAdd) open by default when opening Obsidian Companion."
         android:defaultValue="false"
         app:allowDividerAbove="true"
         android:enabled="false" />

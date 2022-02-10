@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.obsidiancompanion">
+    package="com.obscom.obsidiancompanion">
 
 
     <uses-permission android:name="android.permission.ACTION_OPEN_DOCUMENT" />
@@ -25,13 +25,13 @@
 
         <activity
             android:theme="@style/Theme.AppCompat.Dialog"
-            android:name=".ui.inputDialog.InputDialogActivity"
+            android:name="com.obscom.obsidiancompanion.ui.inputDialog.InputDialogActivity"
             android:exported="false"
             android:label="QuickAdd"
             android:excludeFromRecents="true"
             />
         <activity
-            android:name=".MainActivity"
+            android:name="com.obscom.obsidiancompanion.MainActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -42,7 +42,7 @@
         </activity>
 
         <service
-            android:name=".SendTileService"
+            android:name="com.obscom.obsidiancompanion.SendTileService"
             android:enabled="true"
             android:exported="true"
             android:icon="@drawable/quickaddicon"

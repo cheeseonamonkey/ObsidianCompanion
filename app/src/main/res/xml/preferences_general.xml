@@ -15,25 +15,30 @@
         android:summary="Permissions required for QuickAdd\nCurrent permissions:\n - Manage all files: \n - Write files: "/>
 
 
-    <Preference
-        android:key="prefSetVaultFolder"
-        android:summary="Select Obsidian vault folder"
-        android:title="Set vault folder" />
+        <Preference
+            android:key="prefSetVaultFolder"
+            android:summary="Select Obsidian vault folder"
+            android:title="Set vault folder" />
 
-    <!-- _______hr is drawn here_______ -->
+        <!-- _______hr is drawn here_______ -->
+    <!--
+       <ListPreference
+           android:key="prefVaultShortcuts"
+           android:title="Vault shortcuts"
+           android:summary="Some shortcuts to Vault resources"
+           android:entries="@array/vault_shortcuts"
+           android:entryValues="@array/vault_shortcuts_values" />
+-->
+       <Preference
+           android:key="prefGitHubButton"
+           android:title="Github"
+           app:allowDividerAbove="true"/>
 
 
-
-    <Preference
-        android:key="prefGitHubButton"
-        android:title="Github"
-        app:allowDividerAbove="true"/>
+       <PreferenceCategory android:title="Misc">
 
 
-    <PreferenceCategory android:title="Misc">
-
-
-        <!-- disabled -->
+           <!-- disabled -->
         <!--
         <SwitchPreference
             android:defaultValue="true"
@@ -96,7 +101,7 @@
     <CheckBoxPreference
         android:key="prefDefaultTabGeneral"
         app:title="Default tab"
-        android:summary="Make this home tab open by default when opening Obsidian Companion."
+        android:summary="Make this tab (General) open by default when opening Obsidian Companion."
         android:defaultValue="true"
         app:allowDividerAbove="true"
         android:enabled="false" />

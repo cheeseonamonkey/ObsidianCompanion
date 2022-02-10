@@ -6,7 +6,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.obsidiancompanion"
+        applicationId "com.obscom.obsidiancompanion"
         minSdk 26
         targetSdk 32
         versionCode 1

@@ -7,15 +7,15 @@
 
     <fragment
         android:id="@+id/navigation_general"
-        android:name="com.example.obsidiancompanion.ui.SettingsGeneralFragment"
+        android:name="com.obscom.obsidiancompanion.ui.SettingsGeneralFragment"
         android:label="Settings" />
     <fragment
         android:id="@+id/navigation_quickadd"
-        android:name="com.example.obsidiancompanion.SettingsQuickAddFragment"
+        android:name="com.obscom.obsidiancompanion.SettingsQuickAddFragment"
         android:label="QuickAdd" />
     <fragment
         android:id="@+id/navigation_zipper"
-        android:name="com.example.obsidiancompanion.ui.ZipperFragment"
+        android:name="com.obscom.obsidiancompanion.ui.ZipperFragment"
         android:label="Zipper" />
 
 </navigation>

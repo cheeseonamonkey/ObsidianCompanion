@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.obsidiancompanion",
+  "applicationId": "com.obscom.obsidiancompanion",
   "variantName": "debug",
   "elements": [
     {
