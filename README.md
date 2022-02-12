@@ -1,3 +1,45 @@
+## QuickAdd Usage
+
+Gif usage example
+-GIF EXAMPLE-
+
+1. *Enable required permissions*
+2. *Set QuickAdd file*
+
+3. Press Quick Setting tile icon
+4. Submit text
+
+5. (post-processing on text)
+6. (write text)
+
+
+QuickAdd input dialog:
+![6_dialog](https://user-images.githubusercontent.com/54555500/153515167-1b32df24-4e56-4f22-a175-98945fc8376a.png)
+
+outputted in obsidian with post-processing:
+![7_added](https://user-images.githubusercontent.com/54555500/153515171-d0d30bdf-32b7-45a6-9ce8-05913950e5e8.png)
+
+
+
+### Configuring  post-processing
+
+You can use variables and markdown in these.
+
+
+Prepend default example:
+![4_prepend](https://user-images.githubusercontent.com/54555500/153515139-27de8a6c-b473-4be6-8fbd-4287976dcaaf.png)
+
+Append default example:
+
+![5_append](https://user-images.githubusercontent.com/54555500/153515142-d90fa6eb-f00a-4892-9c9f-dfe2c25a4106.png)
+
+outputted in obsidian with post-processing:
+
+![7_added](https://user-images.githubusercontent.com/54555500/153515229-fe43627e-18d7-4a4b-a1d3-e13c22ea2683.png)
+
+
+
+
 # ObsidianCompanion
 Android companion app to Obsidian.MD
 
@@ -51,41 +93,3 @@ Variables will be replaced in post-processing:
 
 
 
-## QuickAdd Usage
-
-Gif usage example
--GIF EXAMPLE-
-
-1. *Enable required permissions*
-2. *Set QuickAdd file*
-
-3. Press Quick Setting tile icon
-4. Submit text
-
-5. (post-processing on text)
-6. (write text)
-
-
-QuickAdd input dialog:
-![6_dialog](https://user-images.githubusercontent.com/54555500/153515167-1b32df24-4e56-4f22-a175-98945fc8376a.png)
-
-outputted in obsidian with post-processing:
-![7_added](https://user-images.githubusercontent.com/54555500/153515171-d0d30bdf-32b7-45a6-9ce8-05913950e5e8.png)
-
-
-
-### Configuring  post-processing
-
-You can use variables and markdown in these.
-
-
-Prepend default example:
-![4_prepend](https://user-images.githubusercontent.com/54555500/153515139-27de8a6c-b473-4be6-8fbd-4287976dcaaf.png)
-
-Append default example:
-
-![5_append](https://user-images.githubusercontent.com/54555500/153515142-d90fa6eb-f00a-4892-9c9f-dfe2c25a4106.png)
-
-outputted in obsidian with post-processing:
-
-![7_added](https://user-images.githubusercontent.com/54555500/153515229-fe43627e-18d7-4a4b-a1d3-e13c22ea2683.png)
