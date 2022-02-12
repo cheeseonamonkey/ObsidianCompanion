@@ -5,9 +5,9 @@ Gif usage example
 
 ### Setup:
 
-1. **Enable required permissions**
-2. **Set QuickAdd file**
-3. **Activate the Quick Settings tile by dragging it in the notification tray**
+1. Enable required permissions
+2. Set QuickAdd file
+3. Activate the Quick Settings tile by dragging it in the notification tray
 
 ### Usage:
 4. Press Quick Setting tile icon
