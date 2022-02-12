@@ -1,4 +1,4 @@
-## QuickAdd Usage
+# QuickAdd Usage
 
 Gif usage example
 -GIF EXAMPLE-
@@ -7,13 +7,13 @@ Gif usage example
 
 1. Enable required permissions
 2. Set QuickAdd file
-3. Activate the Quick Settings tile by dragging it in the notification tray
+3. Enable the Quick Settings tile by dragging it in the notification tray
 
 ### Usage:
 4. Press Quick Setting tile icon
-5. Submit text
+5. Submit some text
 6. *(post-processing is done on text)*
-7. *(appends text to the end of the picked file)*
+7. *(text is appended to the end of the chosen file)*
 
 
 QuickAdd input dialog:
@@ -24,15 +24,15 @@ outputted in obsidian with post-processing:
 
 
 
-### Configuring  post-processing
+### Configuring post-processing
 
-You can use variables and markdown in these.
+You can use variables and markdown here.
 
 
-Prepend default example:
+#### Prepend default example:
 ![4_prepend](https://user-images.githubusercontent.com/54555500/153515139-27de8a6c-b473-4be6-8fbd-4287976dcaaf.png)
 
-Append default example:
+#### Append default example:
 
 ![5_append](https://user-images.githubusercontent.com/54555500/153515142-d90fa6eb-f00a-4892-9c9f-dfe2c25a4106.png)
 
@@ -41,6 +41,7 @@ outputted in obsidian with post-processing:
 ![7_added](https://user-images.githubusercontent.com/54555500/153515229-fe43627e-18d7-4a4b-a1d3-e13c22ea2683.png)
 
 
+---
 
 
 # ObsidianCompanion
