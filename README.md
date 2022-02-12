@@ -3,15 +3,15 @@
 Gif usage example
 -GIF EXAMPLE-
 
-1. *Enable required permissions*
-2. *Set QuickAdd file*
-3. Activate the Quick Settings tile by dragging it in the notification tray
+1. **Enable required permissions**
+2. **Set QuickAdd file**
+3. **Activate the Quick Settings tile by dragging it in the notification tray**
 
 4. Press Quick Setting tile icon
 5. Submit text
 
-6. (post-processing is done on text)
-7. (appends text to the end of the picked file)
+6. *(post-processing is done on text)*
+7. *(appends text to the end of the picked file)*
 
 
 QuickAdd input dialog:
